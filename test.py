@@ -1,8 +1,7 @@
+from agent.params import model_params_test as model_params
 from agent.env import World
 
-N = 100
-gridsize = 10
-run = World(N,gridsize)
+run = World(*model_params)
 
 for i in range(100):
     run.step()
