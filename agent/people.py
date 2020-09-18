@@ -1,6 +1,7 @@
 import numpy as np
 from mesa import Agent
-from .params import k_c, k_d, k_e, k_p, wealth_inc, timestep
+from .authority import Cop
+from .params import k_c, k_d, k_e, k_p, k_af, wealth_inc, timestep
 
 class Citizen(Agent):
 
@@ -20,13 +21,17 @@ class Citizen(Agent):
     def step(self):
         if self.t % timestep == 0:
             self.update_wealth()
-        self.measure_grievance()
         self.get_neighbors()
+        self.measure_confidence()
+        # self.arrest_prob()
         self.move()
     
     def update_wealth(self):
         choice = np.random.choice(wealth_inc[self.status])
         self.wealth += choice
+    
+    # def arrest_prob(self):
+        
     
     def move(self):
         if self.empty_cells:
@@ -36,11 +41,30 @@ class Citizen(Agent):
     def get_neighbors(self):
         neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, radius = 1)
         self.empty_cells = [c for c in neighborhood if self.model.grid.is_cell_empty(c)]
+        neighbors = self.model.grid.get_neighbors(self.pos, True)
+        self.citizens = []
+        self.cops = []
+        if neighbors:
+            for neighbor in neighbors:
+                if type(neighbor) == Citizen:
+                    self.citizens.append(neighbor)
+                elif type(neighbor) == Cop:
+                    self.cops.append(neighbor)
+        # if self.neighbors and 
+        # self.n_grievance = [a.grievance for a in self.neighbors]
+        # print(self.n_grievance)
     
-    def measure_grievance(self):
+    def measure_confidence(self):
         p_r = k_p * np.exp(-(self.wealth / self.model.mean))
         c_r = k_c[self.status] * self.corruption
         d_r = k_d[self.status] * (1 - self.democracy)
         e_r = k_e[self.status] * (1 - self.employment)
         self.grievance = 1 - np.exp(-(c_r + d_r + e_r + p_r))
-        print(f"wealth : {self.wealth} :: p_rate : {p_r} :: grievance : {self.grievance} :: {self.corruption} :: {self.democracy} :: {self.employment}")
+
+        n_g = sum([a.grievance for a in self.citizens]) + 0.01
+        n_c = len(self.cops) * 1.0
+        self.risk_factor = np.exp(-(n_c / n_g))
+
+        self.confidence = self.grievance * self.risk_factor
+
+        print(f"{self.wealth} :: {p_r} :: {self.grievance} :: {self.risk_factor} :: {self.confidence} :: {self.democracy} :: {self.employment}")
