@@ -1,7 +1,12 @@
-from agent.params import model_params_test as model_params
-from agent.env import World
+import numpy as np
 
-run = World(*model_params)
+c = 1
+d = 1
+e = 0.1
+k = 0.01
+k_c = 0.8
+k_e = 0.99
+k_d = 0.7
 
-for i in range(100):
-    run.step()
+grievance = 1 - np.exp(-(k_d*(1-d) + k_e*(1-e) + (k_c*c)))
+print(grievance)

@@ -8,9 +8,14 @@ from .authority import Cop
 
 class World(Model):
 
-    def __init__(self, gridsize, cop_density):
+    def __init__(self, gridsize, cop_density, citizen_density, agent_type, corruption, democracy, employment):
         self.cop_density = cop_density
-        self.citizen_density = 1 - self.cop_density
+        self.citizen_density = citizen_density
+        self.agent_type = agent_type
+        self.corruption = corruption
+        self.democracy = democracy
+        self.employment = employment
+
         self.grid = MultiGrid(gridsize,gridsize,True)
         self.scheduler = RandomActivation(self)
         self.placement(gridsize)
@@ -26,14 +31,14 @@ class World(Model):
         
         for (_,x,y) in self.grid.coord_iter():
 
-            if random.random() < self.cop_density:
+            if self.random.random() < self.cop_density:
                 a = Cop(unique_id,self)
                 self.scheduler.add(a)
                 self.grid.place_agent(a,(x,y))
                 unique_id += 1
 
-            else:
-                a = Citizen(unique_id,self)
+            elif self.random.random() < (self.cop_density + self.citizen_density):
+                a = Citizen(unique_id, self, self.agent_type, self.corruption, self.democracy, self.employment)
                 self.scheduler.add(a)
                 self.grid.place_agent(a,(x,y))
                 unique_id += 1
