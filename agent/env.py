@@ -1,8 +1,9 @@
 import sys
 import random
+import statistics as s
 from mesa import Model
 from mesa.space import MultiGrid
-from mesa.time import RandomActivation
+from mesa.time import SimultaneousActivation
 from .people import Citizen
 from .authority import Cop
 
@@ -16,8 +17,9 @@ class World(Model):
         self.democracy = democracy
         self.employment = employment
 
+        self.mean = 0
         self.grid = MultiGrid(gridsize,gridsize,True)
-        self.scheduler = RandomActivation(self)
+        self.scheduler = SimultaneousActivation(self)
         self.placement(gridsize)
         self.running = True
 
@@ -42,6 +44,13 @@ class World(Model):
                 self.scheduler.add(a)
                 self.grid.place_agent(a,(x,y))
                 unique_id += 1
+                
+        self.agents = [agent.wealth for agent in self.scheduler.agents if agent.alignment == "Citizen"]
     
+    def mean_wealth(self):
+        self.agents = [agent.wealth for agent in self.scheduler.agents if agent.alignment == "Citizen"]
+        self.mean = s.mean(self.agents)
+
     def step(self):
+        self.mean_wealth()
         self.scheduler.step()

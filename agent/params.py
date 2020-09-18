@@ -14,6 +14,10 @@ model_params = {"gridsize" : gridsize,
 k_c = {"Rich" : 0.3, "Middle" : 0.5, "Poor" : 0.7}
 k_d = {"Rich" : 0.3, "Middle" : 0.5, "Poor" : 0.7}
 k_e = {"Rich" : 0.2, "Middle" : 0.85, "Poor" : 0.9}
+k_p = 0.8
+
+wealth_inc = {"Rich" : [10, 11, 12, 13, 14, 15], "Middle" : [5, 6, 7, 8, 9], "Poor" : [0, 1, 2, 3, 4]}
+timestep = 2
 
 # Threshold
-grienvance_threshold = 0.66
+grienvance_threshold = 0.7
