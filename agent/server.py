@@ -8,7 +8,7 @@ def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Layer" : 0, "Filled": "True", "r": "0.6"}
 
     if agent.alignment == "Citizen":
-        if agent.grievance > grienvance_threshold:
+        if agent.confidence > grienvance_threshold:
             portrayal["Color"] = "gray"
         else:
             if agent.status == "Rich":

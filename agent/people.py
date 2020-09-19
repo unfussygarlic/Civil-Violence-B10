@@ -17,21 +17,18 @@ class Citizen(Agent):
         self.wealth = 1
         self.grievance = 0.0
         self.t = 0
+        self.confidence = 0.0
 
     def step(self):
         if self.t % timestep == 0:
             self.update_wealth()
         self.get_neighbors()
         self.measure_confidence()
-        # self.arrest_prob()
         self.move()
     
     def update_wealth(self):
         choice = np.random.choice(wealth_inc[self.status])
         self.wealth += choice
-    
-    # def arrest_prob(self):
-        
     
     def move(self):
         if self.empty_cells:
@@ -50,10 +47,7 @@ class Citizen(Agent):
                     self.citizens.append(neighbor)
                 elif type(neighbor) == Cop:
                     self.cops.append(neighbor)
-        # if self.neighbors and 
-        # self.n_grievance = [a.grievance for a in self.neighbors]
-        # print(self.n_grievance)
-    
+
     def measure_confidence(self):
         p_r = k_p * np.exp(-(self.wealth / self.model.mean))
         c_r = k_c[self.status] * self.corruption
@@ -61,10 +55,13 @@ class Citizen(Agent):
         e_r = k_e[self.status] * (1 - self.employment)
         self.grievance = 1 - np.exp(-(c_r + d_r + e_r + p_r))
 
-        n_g = sum([a.grievance for a in self.citizens]) + 0.01
+        n_g = (len(self.citizens) * sum([a.grievance for a in self.citizens]))+ 0.01
         n_c = len(self.cops) * 1.0
-        self.risk_factor = np.exp(-(n_c / n_g))
+        self.risk_factor = k_af * np.exp(-(n_c / n_g))
 
-        self.confidence = self.grievance * self.risk_factor
+        if self.cops:
+            self.confidence = self.grievance * self.risk_factor
+        else:
+            self.confidence = self.grievance
 
-        print(f"{self.wealth} :: {p_r} :: {self.grievance} :: {self.risk_factor} :: {self.confidence} :: {self.democracy} :: {self.employment}")
+        print(f"{self.status} :: {self.wealth} :: {p_r} :: {self.grievance} :: {self.risk_factor} :: {self.confidence} :: {len(self.cops)} :: {len(self.citizens)}")
