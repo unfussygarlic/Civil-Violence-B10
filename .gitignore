@@ -1,0 +1,6 @@
+# redundant dirs
+.vscode
+.DS_Store
+
+# python auto generated files 
+__pycache__
