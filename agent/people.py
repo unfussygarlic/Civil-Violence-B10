@@ -5,11 +5,8 @@ from .params import k_c, k_d, k_e, k_p, k_af, wealth_inc, timestep
 
 class Citizen(Agent):
 
-    def __init__(self, unique_id, model, agent_type, corruption, democracy, employment):
+    def __init__(self, unique_id, model, agent_type):
         super().__init__(unique_id,model)
-        self.corruption = corruption
-        self.democracy = democracy
-        self.employment = employment
         self.alignment = "Citizen"
         cat = ["Rich","Middle","Poor"]
         self.status = np.random.choice(cat,p = [0.33,0.33,0.34])
@@ -50,9 +47,9 @@ class Citizen(Agent):
 
     def measure_confidence(self):
         p_r = k_p * np.exp(-(self.wealth / self.model.mean))
-        c_r = k_c[self.status] * self.corruption
-        d_r = k_d[self.status] * (1 - self.democracy)
-        e_r = k_e[self.status] * (1 - self.employment)
+        c_r = k_c[self.status] * self.model.corruption
+        d_r = k_d[self.status] * (1 - self.model.democracy)
+        e_r = k_e[self.status] * (1 - self.model.employment)
         self.grievance = 1 - np.exp(-(c_r + d_r + e_r + p_r))
 
         n_g = (len(self.citizens) * sum([a.grievance for a in self.citizens]))+ 0.01
@@ -63,5 +60,7 @@ class Citizen(Agent):
             self.confidence = self.grievance * self.risk_factor
         else:
             self.confidence = self.grievance
+        
+        # print(f"{self.status} :: {self.wealth} :: {self.grievance} :: {self.risk_factor} :: {self.confidence} :: {self.model.corruption}")
 
-        print(f"{self.status} :: {self.wealth} :: {p_r} :: {self.grievance} :: {self.risk_factor} :: {self.confidence} :: {len(self.cops)} :: {len(self.citizens)}")
+        # print(f"{self.status} :: {self.wealth} :: {p_r} :: {self.grievance} :: {self.risk_factor} :: {self.confidence} :: {len(self.cops)} :: {len(self.citizens)}")

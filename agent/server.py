@@ -1,31 +1,27 @@
 from .env import World
 from .people import Citizen
-from .params import model_params, gridsize, grienvance_threshold
-from mesa.visualization.modules import CanvasGrid
+from .params import model_params, gridsize
+from mesa.visualization.modules import CanvasGrid, ChartModule, TextElement
 from mesa.visualization.ModularVisualization import ModularServer
+from .portrayal import agent_portrayal
 
-def agent_portrayal(agent):
-    portrayal = {"Shape": "circle", "Layer" : 0, "Filled": "True", "r": "0.6"}
+class Core_parameters(TextElement):
+    def render(self, model):
+        corruption = model.corruption
+        democracy = model.democracy
+        employment = model.employment
 
-    if agent.alignment == "Citizen":
-        if agent.confidence > grienvance_threshold:
-            portrayal["Color"] = "gray"
-        else:
-            if agent.status == "Rich":
-                portrayal["Color"] = "green"
+        text = f"Corruption: {round(corruption*100,2)}%  Democracy: {round(democracy*100,2)}%  Employment: {round(employment*100,2)}% <br> \
+                Rich count: {model.rich_count} Middle count: {model.middle_count} Poor count: {model.poor_count}"
 
-            elif agent.status == "Middle":
-                portrayal["Color"] = "blue"
+        return text
 
-            elif agent.status == "Poor":
-                portrayal["Color"] = "red"
-    
-    elif agent.alignment == "Cop":
-        portrayal["Color"] = "black"
-
-    return portrayal
+chart = ChartModule([{"Label": "Poor", "Color": "Red"},
+                    {"Label": "Middle", "Color": "Yellow"},
+                    {"Label": "Rich", "Color": "Green"}],
+                    data_collector_name='datacollector')
 
 grid = CanvasGrid(agent_portrayal, gridsize, gridsize, 500, 500)
 
-server = ModularServer(World, [grid], "World", model_params)
+server = ModularServer(World, [grid, Core_parameters(), chart], "World", model_params)
 server.port = 8521
