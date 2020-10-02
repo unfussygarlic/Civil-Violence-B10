@@ -5,6 +5,7 @@ from mesa.visualization.modules import CanvasGrid, ChartModule, TextElement
 from mesa.visualization.ModularVisualization import ModularServer
 from .portrayal import agent_portrayal
 
+
 class Core_parameters(TextElement):
     def render(self, model):
         corruption = model.corruption
@@ -12,14 +13,19 @@ class Core_parameters(TextElement):
         employment = model.employment
 
         text = f"Corruption: {round(corruption*100,2)}%  Democracy: {round(democracy*100,2)}%  Employment: {round(employment*100,2)}% <br> \
-                Rich count: {model.rich_count} Middle count: {model.middle_count} Poor count: {model.poor_count}"
+                Rich count: {model.r_c}({model.r_a_c}) Middle count: {model.m_c}({model.m_a_c}) Poor count: {model.p_c}({model.p_a_c})"
 
         return text
 
-chart = ChartModule([{"Label": "Poor", "Color": "Red"},
-                    {"Label": "Middle", "Color": "Yellow"},
-                    {"Label": "Rich", "Color": "Green"}],
-                    data_collector_name='datacollector')
+
+chart = ChartModule(
+    [
+        {"Label": "Poor", "Color": "Red"},
+        {"Label": "Middle", "Color": "Yellow"},
+        {"Label": "Rich", "Color": "Green"},
+    ],
+    data_collector_name="datacollector",
+)
 
 grid = CanvasGrid(agent_portrayal, gridsize, gridsize, 500, 500)
 
