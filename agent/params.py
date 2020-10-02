@@ -6,9 +6,10 @@ model_params = {"gridsize" : gridsize,
                 "cop_density" : UserSettableParameter("slider", "Cop Density", 0.01, 0, 1, 0.001),
                 "citizen_density" : UserSettableParameter("slider", "Citizen Density", 0.7, 0, 1, 0.001),
                 "agent_type" : "Poor",
-                "corruption" : UserSettableParameter("slider", "Corruption", 0.0, 0, 1, 0.001),
-                "democracy" : UserSettableParameter("slider", "Democracy", 0.99, 0, 1, 0.001),
-                "employment" : UserSettableParameter("slider", "Employment", 0.99, 0, 1, 0.001)}
+                "c_state" : UserSettableParameter('checkbox', 'Increase Corruption', value=False),
+                "d_state" : UserSettableParameter('checkbox', 'Decrease Democracy', value=False),
+                "e_state" : UserSettableParameter('checkbox', 'Decrease Employment', value=False),
+                "reduction_constant" : UserSettableParameter('number', 'Reduction Constant', value=0.01)}
 
 # Parameter Constants
 k_c = {"Rich" : 0.3, "Middle" : 0.5, "Poor" : 0.7}
@@ -22,4 +23,5 @@ wealth_inc = {"Rich" : [10, 11, 12, 13, 14, 15], "Middle" : [5, 6, 7, 8, 9], "Po
 timestep = 2
 
 # Threshold
-grienvance_threshold = 0.7
+confidence_threshold = 0.7
+reduction_factor = 0.01
