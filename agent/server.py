@@ -21,6 +21,7 @@ class Core_parameters(TextElement):
 
         return text
 
+#A graph showing the growth in population with each iteration
 
 chart = ChartModule(
     [
