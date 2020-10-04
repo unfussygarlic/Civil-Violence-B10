@@ -68,7 +68,7 @@ class Citizen(Agent):
             self.state = "Revolt"
         else:
             self.state = "Calm"
-            
+
     def update_wealth(self):
         net_wealth = wealth_inc[self.status] * (1 - self.model.corruption + 0.1)
         self.wealth += net_wealth
@@ -87,12 +87,12 @@ class Citizen(Agent):
                     self.citizens.append(neighbor)
                 elif neighbor.alignment == "Cop":
                     self.cops.append(neighbor)
-    
+
     def kill_cops(self):
         # TODO
         pass
-    
-    #movement of the agent
+
+    # movement of the agent
 
     def move(self):
         if self.empty_cells:

@@ -11,15 +11,15 @@ from .params import reduction_factor
 
 
 def get_poor_confidence(model):
-    
+
     # Compute the mean confidence of all agents who are Citizen and
     # have status as poor
 
     # Args:
     #    mode: the model instance
-    #returns:
+    # returns:
     #    mean: mean confidence of all poor citizen
-    
+
     confidence = [
         a.confidence
         for a in model.schedule.agents
@@ -33,7 +33,7 @@ def get_poor_confidence(model):
 
 
 def get_middle_confidence(model):
-    
+
     # Compute the mean confidence of all agents who are Citizen and
     # have status as middle
 
@@ -41,7 +41,7 @@ def get_middle_confidence(model):
     #  mode: the model instance
     # returns:
     #   mean: mean confidence of all middle citizen
-    
+
     confidence = [
         a.confidence
         for a in model.schedule.agents
@@ -55,7 +55,7 @@ def get_middle_confidence(model):
 
 
 def get_rich_confidence(model):
-    
+
     # Compute the mean confidence of all agents who are Citizen and
     # have status as rich
 
@@ -63,7 +63,7 @@ def get_rich_confidence(model):
     #   mode: the model instance
     # returns:
     #   mean: mean confidence of all rich citizen
-    
+
     confidence = [
         a.confidence
         for a in model.schedule.agents
@@ -77,7 +77,7 @@ def get_rich_confidence(model):
 
 
 class World(Model):
-    
+
     # The class World which inherits from Model and is responsible for the
     # intarations for the experiment.
 
@@ -91,7 +91,6 @@ class World(Model):
     #   e_state: the employment state in world
     #   reduction_constant: the constant attribute which decide by what rate
     #       the state of c_state, d_state, & e_state will reduce
-    
 
     def __init__(
         self,
@@ -104,7 +103,7 @@ class World(Model):
         e_state,
         reduction_constant,
     ):
-        
+
         # Create a new World instance.
 
         # Args:
@@ -117,7 +116,6 @@ class World(Model):
         #    e_state: the employment state
         #    reduction_constant: the constant attribute which decide by what rate
         #        the state of c_state, d_state, & e_state will reduce
-        
 
         self.cop_density = cop_density
         self.citizen_density = citizen_density
@@ -151,12 +149,12 @@ class World(Model):
         self.running = True
 
     def placement(self, gridsize):
-        
+
         # Placement of agents inside the Grid
 
         # Arguments:
         # gridsize: Dimensions of grid
-        
+
         unique_id = 0
 
         if self.cop_density + self.citizen_density > 1:
@@ -185,9 +183,9 @@ class World(Model):
         )
 
     def update_agent_count(self):
-        
+
         # Updates the number of current and active agents
-        
+
         self.r_c = len(
             [
                 a
@@ -240,11 +238,11 @@ class World(Model):
         )
 
     def update_core(self):
-        
+
         # Updated the core paramenters
         # (corruption, democracy and employment)
         # using reduction_constant.
-        
+
         if self.c_state:
             if self.corruption < 1.0:
                 self.corruption += self.reduction_constant
@@ -262,9 +260,9 @@ class World(Model):
                 self.employment = 0.0
 
     def mean_wealth(self):
-        
+
         # Calculate the mean wealth of all the citizen agents
-        
+
         self.agents = [
             agent.wealth
             for agent in self.schedule.agents
@@ -273,9 +271,9 @@ class World(Model):
         self.mean = s.mean(self.agents)
 
     def step(self):
-        
-       # Calculation of world attributes in one step(iteration) of execution
-        
+
+        # Calculation of world attributes in one step(iteration) of execution
+
         self.update_agent_count()
         self.datacollector.collect(self)
         self.mean_wealth()
