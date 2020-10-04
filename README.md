@@ -1,5 +1,5 @@
-# Modelling Civil Violence: A Multi Agent Simulation
-We have two actors in the model, ‘cops’ which are forces of central authority and the decentralised ‘agents’ who rebel as per their own grievance. Each agent’s grievance is calculated using the product of its perceived hardship and it’s own illegitimacy, i.e unwillingness to abide by the law. Reason for using their product is to depict the fact that, if legitimacy is high (meaning illegitimacy becomes zero), then grievance becomes zero, and no amount of hardship will ever induce any political grievance. However, it is interesting to know that the decision to rebel is not only dependent onmere grievance, but also on the agent’s estimated probability of arrest, and their risk aversion. Thisarrest probability is then determined by cops to active agents ratio, such that the higher the ratio,the more probable is the agent’s arrest if it goes active.
+# Modelling civil disobedience using wealth in agents
+In this research paper, we are trying to model the grievance behaviour of citizens as a measure of varying parameters such as democracy, wealth, employment and corruption. We would then deduce what amount of central forces are required to control the active agents. We aim to model the agents' behaviour in presence of cops and how they become active or inactive as a measure of their risk aversion and their surrounding agents' total grievance. Finally, we also try to understand if wealth can also play a role in agents' civil disobedience.
 
 ## Files
 - `agent/authority.py` : Contains Cops/Central authority agent class.
@@ -11,5 +11,5 @@ We have two actors in the model, ‘cops’ which are forces of central authorit
 
 ## How To Run
 > 1. Clone the repository
-> 2. Install `requirements.txt`
+> 2. Install requirements using `pip install requirements.txt`.
 > 3. Run using `python run.py`
