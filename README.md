@@ -13,9 +13,9 @@ We are trying to model the grievance behaviour of citizens as a measure of varyi
 - [Repository Structure](#repository-structure)
 
 ## How To Run
-> 1. Clone the repository
-> 2. Install `requirements.txt` via pip package manager using `$ pip install -r requirements.txt`
-> 3. Run using `python run.py`
+1. Clone the repository
+2. Install `requirements.txt` via pip package manager using `$ pip install -r requirements.txt`
+3. Run using `python run.py`
 
 ## Implementation Description
 
