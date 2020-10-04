@@ -74,6 +74,7 @@ class Cop(Agent):
         for i in self.citizens:
             if i.n_j > kill_threshold:
                 self.model.kill_agents.append(i)
+                self.model.agents_killed += 1
             elif i.state == "Revolt" and self.random.random() > 0.2:
                 i.state = "Jail"
                 i.movement = False

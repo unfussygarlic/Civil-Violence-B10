@@ -143,6 +143,7 @@ class World(Model):
 
         self.mean = 0
         self.kill_agents = []
+        self.agents_killed = 0
         self.grid = Grid(gridsize, gridsize, False)
         self.schedule = SimultaneousActivation(self)
         self.placement(gridsize)
