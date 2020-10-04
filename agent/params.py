@@ -1,8 +1,14 @@
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
 
+"""
+The file contain the parameters that affect the flow of entire experiment.
+"""
+
+# grid size of one size of the model instance
 gridsize = 25
 
+# model instance parameters
 model_params = {
     "gridsize": gridsize,
     "cop_density": UserSettableParameter("slider", "Cop Density", 0.01, 0, 1, 0.001),
