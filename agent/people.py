@@ -5,12 +5,24 @@ from .params import k_c, k_d, k_e, k_p, k_af
 from .params import wealth_inc, timestep, confidence_threshold
 from .params import jail_period
 
+ """
+    An agent that emulates the behavior of a citizen, he can be a rich 
+    class citizen, middle class citizen or poor citizen.
+    A citizen can go 3 states: Calm, Revolt, Jail
+    It has the following attributes:
+        unique_id
+        model
+        agent_type = cop or citizen
+        wealth
+ """
 
 class Citizen(Agent):
     def __init__(self, unique_id, model, agent_type):
         super().__init__(unique_id, model)
         self.alignment = "Citizen"
-
+        
+        #Randomizing each class of the citizen
+        
         cat = ["Rich", "Middle", "Poor"]
         self.status = np.random.choice(cat, p=[0.33, 0.33, 0.34])
 
@@ -28,7 +40,7 @@ class Citizen(Agent):
         # Jail timestep and Total number of jailing
         self.j_time = 0
         self.n_j = 0
-
+    # Decide whether the move is applicable
     def step(self):
         self.update_jail_time()
         self.update_wealth()
@@ -37,7 +49,7 @@ class Citizen(Agent):
         if self.movement:
             self.update_state()
             self.move()
-
+    
     def update_jail_time(self):
         if self.state == "Jail":
             self.j_time += 1
@@ -48,17 +60,22 @@ class Citizen(Agent):
                 self.n_j += 1
         else:
             pass
-
+        
+    # Updates each iteration to see if his state will change
+    
     def update_state(self):
         if self.confidence > confidence_threshold:
             self.state = "Revolt"
         else:
             self.state = "Calm"
 
+    
     def update_wealth(self):
         net_wealth = wealth_inc[self.status] * (1 - self.model.corruption + 0.1)
         self.wealth += net_wealth
-
+        
+    #Look around and see for neighbors
+    
     def update_neighbors(self):
         neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, radius=1)
         self.empty_cells = [c for c in neighborhood if self.model.grid.is_cell_empty(c)]
@@ -71,7 +88,9 @@ class Citizen(Agent):
                     self.citizens.append(neighbor)
                 elif neighbor.alignment == "Cop":
                     self.cops.append(neighbor)
-
+    
+    #movement of the agent
+    
     def move(self):
         if self.empty_cells:
             pos = self.random.choice(self.empty_cells)
