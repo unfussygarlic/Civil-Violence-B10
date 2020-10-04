@@ -12,9 +12,9 @@ from .params import reduction_factor
 
 def get_poor_confidence(model):
     """
-    Compute the mean confidence of all agents who are Citizen and 
+    Compute the mean confidence of all agents who are Citizen and
     have status as poor
-    
+
     Args:
         mode: the model instance
     returns:
@@ -34,9 +34,9 @@ def get_poor_confidence(model):
 
 def get_middle_confidence(model):
     """
-    Compute the mean confidence of all agents who are Citizen and 
+    Compute the mean confidence of all agents who are Citizen and
     have status as middle
-    
+
     Args:
         mode: the model instance
     returns:
@@ -56,9 +56,9 @@ def get_middle_confidence(model):
 
 def get_rich_confidence(model):
     """
-    Compute the mean confidence of all agents who are Citizen and 
+    Compute the mean confidence of all agents who are Citizen and
     have status as rich
-    
+
     Args:
         mode: the model instance
     returns:
@@ -80,7 +80,7 @@ class World(Model):
     """
     The class World which inherits from Model and is responsible for the
     intarations for the experiment.
-    
+
     Attributs:
         gridsize: dimentions of the world grid
         cop_density: density of the cops placed in world
@@ -92,6 +92,7 @@ class World(Model):
         reduction_constant: the constant attribute which decide by what rate
             the state of c_state, d_state, & e_state will reduce
     """
+
     def __init__(
         self,
         gridsize,
@@ -105,7 +106,7 @@ class World(Model):
     ):
         """
         Create a new World instance.
-        
+
         Args:
             gridsize: the size of grid
             cop_density: density of cops to be placed
@@ -115,7 +116,7 @@ class World(Model):
             d_state: the democracy state
             e_state: the employment state
             reduction_constant: the constant attribute which decide by what rate
-                the state of c_state, d_state, & e_state will reduce 
+                the state of c_state, d_state, & e_state will reduce
         """
 
         self.cop_density = cop_density
@@ -125,7 +126,7 @@ class World(Model):
         self.c_state = c_state
         self.d_state = d_state
         self.e_state = e_state
-        
+
         # the initial corrution, democracy, & employment constant values
         self.corruption = 0.0
         self.democracy = 1.0
