@@ -1,17 +1,17 @@
 from mesa import Agent
 from .params import kill_threshold, cop_threshold, confidence_threshold, r_c
 
-# TODO: 
+# TODO:
 # Changing behaviour based on core parameters
-# 
+
 
 class Cop(Agent):
     """
     A central authority agent whose task to capture or eliminate revolting citizen.
-    Rule: Eliminate citizen if it is revolting and has been jailed a set number of 
-    times before, else jail the citizen for set amount of time and increase the 
+    Rule: Eliminate citizen if it is revolting and has been jailed a set number of
+    times before, else jail the citizen for set amount of time and increase the
     jailed counter.
-    
+
     Attributes:
         unique_id: unique int indentifier of the agent
         model: model instance under which the agent is running
@@ -21,9 +21,10 @@ class Cop(Agent):
         neighbors: the neighboring agents
         citizens: list of citizen around the agent
         cops: list of cops around the agent
-        kill_threshold: the number of times a citizen can be jailed before being 
+        kill_threshold: the number of times a citizen can be jailed before being
             eliminated by Cop
     """
+
     def __init__(self, unique_id, model):
         """
         Initialize the Cop agent with a unique_id and the model instance
@@ -34,8 +35,8 @@ class Cop(Agent):
     def step(self):
         """
         A single step(or tick) in the model and the calucations that should be done.
-        In a single step the cop agent should know its neighbor, move to a new 
-        position and jail revolitng citizen(if found) 
+        In a single step the cop agent should know its neighbor, move to a new
+        position and jail revolitng citizen(if found)
         """
         self.get_neighbors()
         self.move()
@@ -68,8 +69,8 @@ class Cop(Agent):
 
     def jail_citizen(self):
         """
-        Jail or eliminate the citizen based on the number of times a citizen 
-        has been jailed.
+        Jail or eliminate the citizen based on the number of times a citizen
+        has been jailed before
         """
         for i in self.citizens:
             if i.n_j > kill_threshold:

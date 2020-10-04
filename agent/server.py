@@ -5,8 +5,9 @@ from mesa.visualization.modules import CanvasGrid, ChartModule, TextElement
 from mesa.visualization.ModularVisualization import ModularServer
 from .portrayal import agent_portrayal
 
-# Displaying current level of corruption, democracy and employment in percentage 
+# Displaying current level of corruption, democracy and employment in percentage
 # Displaying current count of Rich class people, Middle class people, Poor class people
+
 
 class Core_parameters(TextElement):
     def render(self, model):
@@ -19,7 +20,8 @@ class Core_parameters(TextElement):
 
         return text
 
-#A graph showing the growth in population with each iteration
+
+# A graph showing the growth in population with each iteration
 
 chart = ChartModule(
     [

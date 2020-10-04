@@ -11,6 +11,7 @@ from .params import model_params, gridsize, confidence_threshold
 #     poor class agent will be yellow
 #     any agent that gets jailed becomes a black square
 
+
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Layer": 0, "Filled": "True", "r": "0.5"}
 
