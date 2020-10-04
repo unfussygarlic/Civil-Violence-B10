@@ -10,8 +10,6 @@ from .portrayal import agent_portrayal
         
 """
    
-"""
-
 class Core_parameters(TextElement):
     def render(self, model):
         corruption = model.corruption
