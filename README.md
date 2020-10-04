@@ -5,11 +5,17 @@ We are trying to model the grievance behaviour of citizens as a measure of varyi
 ## Table of content
 
 - [Modelling Civil Violence: A Multi Agent Simulation](#modelling-civil-disobedience-using-wealth-in-agents)
-- [Implementation Description(Beta)](#implementation-description)
-  - [Model Details](#model-details)
-- [Files](#files)
 - [How To Run](#how-to-run)
+- [Implementation Description](#implementation-description)
+  - [Model Details](#model-details)
+- [Results](#results)
+- [Files](#files)
 - [Repository Structure](#repository-structure)
+
+## How To Run
+> 1. Clone the repository
+> 2. Install `requirements.txt` via pip package manager using `$ pip install -r requirements.txt`
+> 3. Run using `python run.py`
 
 ## Implementation Description
 
@@ -36,14 +42,31 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 
 ## Results
 
-Description of colors agents will take(all agents are circles):
-revolt agent will be gray
-cop agent will be black
-rich class agent will be a tone of sour cherry
-middle class agent will be red
-poor class agent will be yellow
-any agent that gets jailed becomes a black square
-colors
+- The grid at one step in the experiment:
+
+   Description of colors agents will take(all agents are circles):
+   
+    1. Revolt agent will be gray
+    2. Cop agent will be black 
+    3. Rich class agent will be a tone of sour cherry
+    4. Middle class agent will be red
+    5. Poor class agent will be yellow
+    6. Any agent that gets jailed becomes a black square
+    
+<p align="center">
+  <img src="./imgs/grid.png" alt="Graph" width="400">
+</p>
+
+- The graph which shows the grievance and the number of steps: 
+<p align="center">
+  <img src="./imgs/Graph.png" alt="Graph" width="400">
+</p>
+
+- The parameters used in the experiment: 
+<p align="center">
+  <img src="./imgs/parameters.png" alt="Graph" width="200">
+</p>
+
 
 ## Files
 - `agent/authority.py` : Contains Cops/Central authority agent class.
@@ -53,10 +76,6 @@ colors
 - `agent/server.py` : Sets up server and visualization.
 - `run.py` : Opens the server and port for visualization.
 
-## How To Run
-> 1. Clone the repository
-> 2. Install `requirements.txt` via pip package manager using `$ pip install -r requirements.txt`
-> 3. Run using `python run.py`
 
 ## Repository structure
 ```shell
@@ -70,6 +89,10 @@ colors
 │   ├── people.py
 │   ├── portrayal.py
 │   └── server.py
+├── imgs
+│   ├── Graph.png
+│   ├── grid.png
+│   └── parameters.png
 ├── requirements.txt
 └── run.py
 ```
