@@ -77,21 +77,21 @@ def get_rich_confidence(model):
 
 
 class World(Model):
-    
-    # The class World which inherits from Model and is responsible for the
-    # intarations for the experiment.
+    """
+    The class World which inherits from Model and is responsible for the
+    intarations for the experiment.
 
-    # Attributs:
-    #   gridsize: dimentions of the world grid
-    #   cop_density: density of the cops placed in world
-    #   citizen_density: density of the citizens in world
-    #   agent_type: the alignment of agent either as cop or citizen
-    #   c_state: the corruption state in world
-    #   d_state: the democracy state in world
-    #   e_state: the employment state in world
-    #   reduction_constant: the constant attribute which decide by what rate
-    #       the state of c_state, d_state, & e_state will reduce
-    
+    Attributs:
+      gridsize: dimentions of the world grid
+      cop_density: density of the cops placed in world
+      citizen_density: density of the citizens in world
+      agent_type: the alignment of agent either as cop or citizen
+      c_state: the corruption state in world
+      d_state: the democracy state in world
+      e_state: the employment state in world
+      reduction_constant: the constant attribute which decide by what rate
+      the state of c_state, d_state, & e_state will reduce
+    """
 
     def __init__(
         self,
