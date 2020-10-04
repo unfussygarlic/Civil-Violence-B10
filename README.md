@@ -1,4 +1,4 @@
-# Modelling civil disobedience: adding wealth in agents
+# Modelling civil disobedience with wealth in agents
 In this research paper, we are trying to model the grievance behaviour of citizens as a measure of varying parameters such as democracy, wealth and corruption. We would then deduce what amount of central forces are required to control the active agents. We aim to model the agents' behaviour in presence of cops and how they become active or inactive as a measure of their risk aversion and their surrounding agents' total grievance. Finally, we also try to understand if wealth can also play a role in agents' civil disobedience.
 
 ## Files
