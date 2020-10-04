@@ -18,7 +18,7 @@ def agent_portrayal(agent):
     if agent.alignment == "Citizen":
         portrayal[
             "Text"
-        ] = f"{agent.unique_id} | {agent.status} | {round(agent.confidence,2)}"
+        ] = f"{agent.status} | {agent.state} | {round(agent.confidence,2)}"
 
         if agent.state == "Revolt":
             portrayal["Color"] = "gray"
