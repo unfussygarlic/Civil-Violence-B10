@@ -1,8 +1,16 @@
 from .env import World
 from .people import Citizen
 from .params import model_params, gridsize, confidence_threshold
-
-
+ """
+    All agents will be circle in a 25x25 grid
+    
+    Description of colors agents will take:
+    revolt agent will be gray
+    cop agent will be black
+    rich class agent will be a tone of sour cherry
+    middle class agent will be red
+    poor class agent will be yellow
+ """
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Layer": 0, "Filled": "True", "r": "0.5"}
 
