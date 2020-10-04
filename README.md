@@ -19,7 +19,7 @@ We are trying to model the grievance behaviour of citizens as a measure of varyi
 
 ## Implementation Description
 
-In the present implemenation, there are two main agents(i.e. Citizen and Cops). The task of Citizen is to revolt if the grievance is above a threshold and the task of Cops is to imprison the citizen who are in revolt state. The Cops can also eliminate the citizen based on the number of times it has been imprisoned in the past.
+In the beta implementation, there are two main agents(i.e. Citizen and Cops). The task of Citizen is to revolt if the grievance is above a threshold and the task of Cops is to imprison the citizen who is in revolt state. The Cops can also eliminate the citizen based on the number of times it has been imprisoned in the past.
 
 There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which essentially tell us about the economic status of that agent. Simultaneously, the parameters that affect the Citizen are **Democracy, Employment, Corruption**.
 
@@ -31,22 +31,22 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
   certain population ratio of citizens of varying economic status. The property of Citizen is:
     - It can revolt against the Central Authority
     - The grievance of a citizen is decided by the three global parameters(i.e. Democracy, Employment, Corruption), its economic status, its confidence.
-    - It can inspect upto a certain number of cells in each direction (N, S, E and W).
-    - It can perceive its neighbor(as citizen or cops)
+    - It can inspect up to a certain number of cells in each direction (N, S, E and W).
+    - It can perceive its neighbour(as citizen or cops)
     
 - **Cops**
   
-  Cops represent the central authority and are influenced by the local behaviour. Cops can:
+  Cops represent the central authority and are influenced by local behaviour. Cops can:
     - Jail revolting citizen
-    - Elinimate excessive revolting citizen based on a threshold(*kill_threshold*).
+    - Eliminate excessive revolting citizen based on a threshold(*kill_threshold*).
 
 ## Results
 
 - The grid at one step in the experiment:
 
-   Description of colors agents will take(all agents are circles):
+   Description of colours agents will take(all agents are circles):
    
-    1. Revolt agent will be gray
+    1. Revolt agent will be grey
     2. Cop agent will be black 
     3. Rich class agent will be a tone of sour cherry
     4. Middle class agent will be red
