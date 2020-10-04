@@ -1,9 +1,9 @@
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
 
-"""
-The file contain the parameters that affect the flow of entire experiment.
-"""
+
+# The file contain the parameters that affect the flow of entire experiment.
+
 
 # grid size of one size of the model instance
 gridsize = 25
@@ -47,3 +47,6 @@ cop_threshold = 0.66
 # Jail parameters
 jail_period = 5
 kill_threshold = 10
+
+# Agent and Cop choice
+r_c = 0.2

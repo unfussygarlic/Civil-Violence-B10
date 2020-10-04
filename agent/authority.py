@@ -1,6 +1,9 @@
 from mesa import Agent
-from .params import kill_threshold, cop_threshold, confidence_threshold
+from .params import kill_threshold, cop_threshold, confidence_threshold, r_c
 
+# TODO: 
+# Changing behaviour based on core parameters
+# 
 
 class Cop(Agent):
     """
@@ -71,6 +74,6 @@ class Cop(Agent):
         for i in self.citizens:
             if i.n_j > kill_threshold:
                 self.model.kill_agents.append(i)
-            elif i.state == "Revolt":
+            elif i.state == "Revolt" and self.random.random() > 0.2:
                 i.state = "Jail"
                 i.movement = False

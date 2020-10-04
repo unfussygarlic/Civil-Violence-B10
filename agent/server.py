@@ -4,12 +4,10 @@ from .params import model_params, gridsize
 from mesa.visualization.modules import CanvasGrid, ChartModule, TextElement
 from mesa.visualization.ModularVisualization import ModularServer
 from .portrayal import agent_portrayal
-"""
-        Displaying current level of corruption, democracy and employment in percentage 
-        Displaying current count of Rich class people, Middle class people, Poor class people
-        
-"""
-   
+
+# Displaying current level of corruption, democracy and employment in percentage 
+# Displaying current count of Rich class people, Middle class people, Poor class people
+
 class Core_parameters(TextElement):
     def render(self, model):
         corruption = model.corruption

@@ -1,20 +1,18 @@
 import numpy as np
 from mesa import Agent
 from .authority import Cop
-from .params import k_c, k_d, k_e, k_p, k_af
+from .params import k_c, k_d, k_e, k_p, k_af, r_c
 from .params import wealth_inc, timestep, confidence_threshold
 from .params import jail_period
 
- """
-    An agent that emulates the behavior of a citizen, he can be a rich 
-    class citizen, middle class citizen or poor citizen.
-    A citizen can go 3 states: Calm, Revolt, Jail
-    It has the following attributes:
-        unique_id
-        model
-        agent_type = cop or citizen
-        wealth
- """
+# An agent that emulates the behavior of a citizen, he can be a rich 
+# class citizen, middle class citizen or poor citizen.
+# A citizen can go 3 states: Calm, Revolt, Jail
+# It has the following attributes:
+#     unique_id
+#     model
+#     agent_type = cop or citizen
+#     wealth
 
 class Citizen(Agent):
     def __init__(self, unique_id, model, agent_type):
@@ -64,7 +62,7 @@ class Citizen(Agent):
     # Updates each iteration to see if his state will change
     
     def update_state(self):
-        if self.confidence > confidence_threshold:
+        if self.confidence > confidence_threshold and self.random.random() > r_c:
             self.state = "Revolt"
         else:
             self.state = "Calm"
