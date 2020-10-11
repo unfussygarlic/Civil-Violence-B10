@@ -1,14 +1,8 @@
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
 
-
-# The file contain the parameters that affect the flow of entire experiment.
-
-
-# grid size of one size of the model instance
 gridsize = 25
 
-# model instance parameters
 model_params = {
     "gridsize": gridsize,
     "cop_density": UserSettableParameter("slider", "Cop Density", 0.01, 0, 1, 0.001),
@@ -19,6 +13,7 @@ model_params = {
     "c_state": UserSettableParameter("checkbox", "Increase Corruption", value=True),
     "d_state": UserSettableParameter("checkbox", "Decrease Democracy", value=True),
     "e_state": UserSettableParameter("checkbox", "Decrease Employment", value=True),
+    "n_state": UserSettableParameter("checkbox", "Negotiation", value=True),
     "reduction_constant": UserSettableParameter(
         "number", "Reduction Constant", value=0.01
     ),
@@ -48,5 +43,8 @@ cop_threshold = 0.66
 jail_period = 5
 kill_threshold = 10
 
-# Agent and Cop choice
-r_c = 0.2
+#citizen parameters to kill cops 
+# < 0.2 cops survive 
+# > 0.3 cops die after 100 iterations
+angry_threshold = 0.3
+dead_threshold = 15
