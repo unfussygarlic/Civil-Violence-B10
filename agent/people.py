@@ -71,6 +71,8 @@ class Citizen(Agent):
                     self.citizens.append(neighbor)
                 elif neighbor.alignment == "Cop":
                     self.cops.append(neighbor)
+        
+        self.non_jailed_citizens = [a for a in self.citizens if a.status == "Revolt"]
 
     def move(self):
         if self.empty_cells:
@@ -87,14 +89,11 @@ class Citizen(Agent):
 
         self.grievance = 1 - np.exp(-(c_r + d_r + e_r + p_r))
 
-        n_g = (len(self.citizens) * sum([a.grievance for a in self.citizens])) + 0.01
+        n_g = (len(self.non_jailed_citizens) * sum([a.grievance for a in self.non_jailed_citizens])) + 0.01
         n_c = len(self.cops) * 1.0
         self.risk_factor = k_af * np.exp(-(n_c / n_g))
 
-        if self.cops:
-            self.confidence = 1-(self.grievance * self.risk_factor)
-        elif self.citizens:
-            self.confidence = self.grievance * self.risk_factor
+        self.confidence = self.grievance * self.risk_factor
 
     def kill_cops(self):
             for i in self.cops:
@@ -102,4 +101,3 @@ class Citizen(Agent):
                     self.model.kill_agents.append(i)
                 else:
                     pass 
-  
