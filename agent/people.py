@@ -102,6 +102,4 @@ class Citizen(Agent):
                     self.model.kill_agents.append(i)
                 else:
                     pass 
-    
-
-
+  
