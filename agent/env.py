@@ -11,15 +11,6 @@ from .params import reduction_factor
 
 
 def get_poor_confidence(model):
-
-    # Compute the mean confidence of all agents who are Citizen and
-    # have status as poor
-
-    # Args:
-    #    mode: the model instance
-    # returns:
-    #    mean: mean confidence of all poor citizen
-
     confidence = [
         a.confidence
         for a in model.schedule.agents
@@ -33,15 +24,6 @@ def get_poor_confidence(model):
 
 
 def get_middle_confidence(model):
-
-    # Compute the mean confidence of all agents who are Citizen and
-    # have status as middle
-
-    # Args:
-    #  mode: the model instance
-    # returns:
-    #   mean: mean confidence of all middle citizen
-
     confidence = [
         a.confidence
         for a in model.schedule.agents
@@ -55,15 +37,6 @@ def get_middle_confidence(model):
 
 
 def get_rich_confidence(model):
-
-    # Compute the mean confidence of all agents who are Citizen and
-    # have status as rich
-
-    # Args:
-    #   mode: the model instance
-    # returns:
-    #   mean: mean confidence of all rich citizen
-
     confidence = [
         a.confidence
         for a in model.schedule.agents
@@ -75,23 +48,21 @@ def get_rich_confidence(model):
     else:
         return 0
 
+def get_cop_confidence(model):
+    confidence = [
+        a.confidence
+        for a in model.schedule.agents
+        if a.alignment == "Cop" and a.status == "Neutral"
+    ]
+    if confidence:
+        mean = s.mean(confidence)
+        return mean
+    else:
+        return 0
+
+
 
 class World(Model):
-
-    # The class World which inherits from Model and is responsible for the
-    # intarations for the experiment.
-
-    # Attributs:
-    #   gridsize: dimentions of the world grid
-    #   cop_density: density of the cops placed in world
-    #   citizen_density: density of the citizens in world
-    #   agent_type: the alignment of agent either as cop or citizen
-    #   c_state: the corruption state in world
-    #   d_state: the democracy state in world
-    #   e_state: the employment state in world
-    #   reduction_constant: the constant attribute which decide by what rate
-    #       the state of c_state, d_state, & e_state will reduce
-
     def __init__(
         self,
         gridsize,
@@ -101,21 +72,9 @@ class World(Model):
         c_state,
         d_state,
         e_state,
+        n_state,
         reduction_constant,
     ):
-
-        # Create a new World instance.
-
-        # Args:
-        #    gridsize: the size of grid
-        #    cop_density: density of cops to be placed
-        #    citizen_density: density of citizens to be placed
-        #    agent_type: the alignment of agent either as cop or citizen
-        #    c_state: the corruption state
-        #    d_state: the democracy state
-        #    e_state: the employment state
-        #    reduction_constant: the constant attribute which decide by what rate
-        #        the state of c_state, d_state, & e_state will reduce
 
         self.cop_density = cop_density
         self.citizen_density = citizen_density
@@ -124,12 +83,12 @@ class World(Model):
         self.c_state = c_state
         self.d_state = d_state
         self.e_state = e_state
+        self.n_state = n_state
 
-        # the initial corrution, democracy, & employment constant values
         self.corruption = 0.0
         self.democracy = 1.0
         self.employment = 1.0
-
+        self.negotiation = 0.3
         self.reduction_constant = reduction_constant
 
         # Agent count r_c: rich_count, r_a_c: rich_active_count ...
@@ -139,22 +98,21 @@ class World(Model):
         self.m_a_c = 0
         self.p_c = 0
         self.p_a_c = 0
-
+        self.c_c = 0
+        self.c_a_c = 0
         self.mean = 0
         self.kill_agents = []
-        self.agents_killed = 0
         self.grid = Grid(gridsize, gridsize, False)
         self.schedule = SimultaneousActivation(self)
         self.placement(gridsize)
         self.running = True
 
     def placement(self, gridsize):
-
-        # Placement of agents inside the Grid
-
-        # Arguments:
-        # gridsize: Dimensions of grid
-
+        """
+        Placement of agents inside the Grid
+        Arguments:
+        gridsize: Dimensions of grid
+        """
         unique_id = 0
 
         if self.cop_density + self.citizen_density > 1:
@@ -179,13 +137,14 @@ class World(Model):
                 "Poor": get_poor_confidence,
                 "Middle": get_middle_confidence,
                 "Rich": get_rich_confidence,
+                "Cop" : get_cop_confidence,
             }
         )
 
     def update_agent_count(self):
-
-        # Updates the number of current and active agents
-
+        """
+        Updates the number of current and active agents
+        """
         self.r_c = len(
             [
                 a
@@ -236,13 +195,29 @@ class World(Model):
                 and a.state == "Revolt"
             ]
         )
+        self.c_c = len(
+            [
+                a
+                for a in self.schedule.agents
+                if a.alignment == "Cop" and a.status == "Neutral"
+            ]
+        )
+        self.c_a_c = len(
+            [
+                a
+                for a in self.schedule.agents
+                if a.alignment == "Cop"
+                and a.status == "Neutral"
+                and a.state == "Calm"
+            ]
+        )
 
     def update_core(self):
-
-        # Updated the core paramenters
-        # (corruption, democracy and employment)
-        # using reduction_constant.
-
+        """
+        Updated the core paramenters
+        (corruption, democracy and employment)
+        using reduction_constant.
+        """
         if self.c_state:
             if self.corruption < 1.0:
                 self.corruption += self.reduction_constant
@@ -258,11 +233,17 @@ class World(Model):
                 self.employment -= self.reduction_constant
             else:
                 self.employment = 0.0
+        
+        if self.n_state:
+            if self.negotiation > 0.2:
+                self.negotiation -= (self.reduction_constant)*10
+            else:
+                self.negotiation = 0.2
+
+    # def negotiation(self):
+    #     if self.
 
     def mean_wealth(self):
-
-        # Calculate the mean wealth of all the citizen agents
-
         self.agents = [
             agent.wealth
             for agent in self.schedule.agents
@@ -271,14 +252,12 @@ class World(Model):
         self.mean = s.mean(self.agents)
 
     def step(self):
-
-        # Calculation of world attributes in one step(iteration) of execution
-
         self.update_agent_count()
         self.datacollector.collect(self)
         self.mean_wealth()
         self.schedule.step()
         self.update_core()
+        
 
         # Code from stackoverflow. Stuart Ball'answered in
         # https://stackoverflow.com/questions/62821720/deleting-agent-in-mesa
@@ -289,6 +268,6 @@ class World(Model):
                 self.schedule.remove(i)
             self.kill_agents = []
 
-        total_agents = self.r_c + self.m_c + self.p_c
-        if total_agents < 2:
+        total_agents = self.r_c + self.m_c + self.p_c + self.c_c
+        if total_agents < 3:
             self.running = False
