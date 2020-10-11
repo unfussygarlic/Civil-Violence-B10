@@ -1,59 +1,53 @@
+import numpy as np
 from mesa import Agent
-from .params import kill_threshold, cop_threshold, confidence_threshold, r_c
-
-# TODO:
-# Changing behaviour based on core parameters
-
+from .params import kill_threshold, cop_threshold, confidence_threshold, jail_period
+from .params import k_c, k_d, k_e, k_p, k_af
 
 class Cop(Agent):
-
-    # A central authority agent whose task to capture or eliminate revolting citizen.
-    # Rule: Eliminate citizen if it is revolting and has been jailed a set number of
-    # times before, else jail the citizen for set amount of time and increase the
-    # jailed counter.
-
-    # Attributes:
-    #   unique_id: unique int indentifier of the agent
-    #   model: model instance under which the agent is running
-    #   alignment: tell the alignment of agent(whether Cop or Citizen)
-    #   empty_cells: empty locations around the agent
-    #   neighborhood: the status of other agents around the agent in consideration
-    #   neighbors: the neighboring agents
-    #   citizens: list of citizen around the agent
-    #   cops: list of cops around the agent
-    #   kill_threshold: the number of times a citizen can be jailed before being
-    #       eliminated by Cop
-
     def __init__(self, unique_id, model):
-
-        #  Initialize the Cop agent with a unique_id and the model instance
-
         super().__init__(unique_id, model)
         self.alignment = "Cop"
+        self.status = "Neutral"
+        self.state = "Calm"
+        self.confidence = 0
+        self.angry_time = 0
+        self.n_cop = 0
+        self.movement = True
+        
 
     def step(self):
-
-        # A single step(or tick) in the model and the calucations that should be done.
-        # In a single step the cop agent should know its neighbor, move to a new
-        # position and jail revolitng citizen(if found)
-
         self.get_neighbors()
-        self.move()
         self.jail_citizen()
+        self.measure_cop_confidence()
+        self.update_angry_time()
+        self.update_cop_state()
+
+        if self.movement:
+            self.move()
+
+
+    def update_angry_time(self):
+        if self.state == "Angry":
+            self.angry_time += 1
+            if self.angry_time > jail_period:
+                self.update_cop_state()
+                self.angry_time = 0
+                self.n_cop += 1
+        else:
+            pass
+
+    def update_cop_state(self):
+        if self.confidence < cop_threshold:
+            self.state = "Angry"
+        else:
+            self.state = "Calm"        
 
     def move(self):
-
-        # Move the agent to a new empty position on the grid
-
         if self.empty_cells:
             pos = self.random.choice(self.empty_cells)
             self.model.grid.move_agent(self, pos)
 
     def get_neighbors(self):
-
-        # Find the neighbor(s) around the Cop agent and categorize into two either
-        # citizen or cops
-
         neighborhood = self.model.grid.get_neighborhood(self.pos, moore=True, radius=1)
         self.empty_cells = [c for c in neighborhood if self.model.grid.is_cell_empty(c)]
         neighbors = self.model.grid.get_neighbors(self.pos, True)
@@ -67,22 +61,30 @@ class Cop(Agent):
                     self.cops.append(neighbor)
 
     def jail_citizen(self):
-
-        # Jail or eliminate the citizen based on the number of times a citizen
-        # has been jailed before
-
         for i in self.citizens:
-            if i.n_j > kill_threshold:
+            if (i.n_j +self.model.negotiation) > kill_threshold:             #to avoid the death of citizens
                 self.model.kill_agents.append(i)
-                self.model.agents_killed += 1
-            elif i.state == "Revolt" and self.random.random() > 0.2:
+            elif i.state == "Revolt":
                 i.state = "Jail"
                 i.movement = False
 
-    def vary_behaviour(self):
-        # TODO
-        pass
+    def measure_cop_confidence(self):
+        
+        # corruption, democracy and employment factors
+        c_r = 0.33 * self.model.corruption
+        d_r = 0.33 * (1 - self.model.democracy)
+        e_r = 0.33 * (1 - self.model.employment)
 
-    def negotiation(self):
-        # TODO
-        pass
+        self.grievance = 1 - np.exp(-(c_r + d_r + e_r))
+
+        n_g = (len(self.citizens) * sum([a.grievance for a in self.citizens])) + 0.01
+        n_c = len(self.cops) * 1.0
+        self.risk_factor = k_af * np.exp(-(n_c / n_g))
+
+        if self.cops:
+            self.confidence = 1-(self.grievance * self.risk_factor)
+
+        elif self.citizens:
+            self.confidence = self.grievance * self.risk_factor
+       
+    # def negotiation(self):
