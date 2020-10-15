@@ -10,72 +10,6 @@ from .authority import Cop
 from .params import reduction_factor
 
 
-def get_poor_confidence(model):
-    
-    # Compute the mean confidence of all agents who are Citizen and
-    # have status as poor
-
-    # Args:
-    #    mode: the model instance
-    #returns:
-    #    mean: mean confidence of all poor citizen
-    
-    confidence = [
-        a.confidence
-        for a in model.schedule.agents
-        if a.alignment == "Citizen" and a.status == "Poor"
-    ]
-    if confidence:
-        mean = s.mean(confidence)
-        return mean
-    else:
-        return 0
-
-
-def get_middle_confidence(model):
-    
-    # Compute the mean confidence of all agents who are Citizen and
-    # have status as middle
-
-    # Args:
-    #  mode: the model instance
-    # returns:
-    #   mean: mean confidence of all middle citizen
-    
-    confidence = [
-        a.confidence
-        for a in model.schedule.agents
-        if a.alignment == "Citizen" and a.status == "Middle"
-    ]
-    if confidence:
-        mean = s.mean(confidence)
-        return mean
-    else:
-        return 0
-
-
-def get_rich_confidence(model):
-    
-    # Compute the mean confidence of all agents who are Citizen and
-    # have status as rich
-
-    # Args:
-    #   mode: the model instance
-    # returns:
-    #   mean: mean confidence of all rich citizen
-    
-    confidence = [
-        a.confidence
-        for a in model.schedule.agents
-        if a.alignment == "Citizen" and a.status == "Rich"
-    ]
-    if confidence:
-        mean = s.mean(confidence)
-        return mean
-    else:
-        return 0
-
-
 class World(Model):
     """
     The class World which inherits from Model and is responsible for the
@@ -86,7 +20,7 @@ class World(Model):
       cop_density: density of the cops placed in world
       citizen_density: density of the citizens in world
       agent_type: the alignment of agent either as cop or citizen
-      c_state: the corruption state in world
+      c_state: the legitimacy state in world
       d_state: the democracy state in world
       e_state: the employment state in world
       reduction_constant: the constant attribute which decide by what rate
@@ -99,10 +33,11 @@ class World(Model):
         cop_density,
         citizen_density,
         agent_type,
-        c_state,
-        d_state,
-        e_state,
+        legitimacy,
+        l_state,
         reduction_constant,
+        active_threshold,
+        include_wealth
     ):
         
         # Create a new World instance.
@@ -112,7 +47,7 @@ class World(Model):
         #    cop_density: density of cops to be placed
         #    citizen_density: density of citizens to be placed
         #    agent_type: the alignment of agent either as cop or citizen
-        #    c_state: the corruption state
+        #    c_state: the legitimacy state
         #    d_state: the democracy state
         #    e_state: the employment state
         #    reduction_constant: the constant attribute which decide by what rate
@@ -123,16 +58,14 @@ class World(Model):
         self.citizen_density = citizen_density
         self.agent_type = agent_type
 
-        self.c_state = c_state
-        self.d_state = d_state
-        self.e_state = e_state
-
-        # the initial corrution, democracy, & employment constant values
-        self.corruption = 0.0
-        self.democracy = 1.0
-        self.employment = 1.0
+        self.legitimacy = legitimacy
+        self.l_state = l_state
 
         self.reduction_constant = reduction_constant
+        self.active_threshold = active_threshold
+        self.include_wealth = include_wealth
+
+        self.ap_constant = 2.3
 
         # Agent count r_c: rich_count, r_a_c: rich_active_count ...
         self.r_c = 0
@@ -171,16 +104,29 @@ class World(Model):
                 unique_id += 1
 
             elif self.random.random() < (self.cop_density + self.citizen_density):
-                a = Citizen(unique_id, self, self.agent_type)
+                a = Citizen(unique_id, 
+                            self,
+                            hardship = self.random.random(), 
+                            risk_aversion = self.random.random())
                 self.schedule.add(a)
                 self.grid.place_agent(a, (x, y))
                 unique_id += 1
 
         self.datacollector = DataCollector(
             model_reporters={
-                "Poor": get_poor_confidence,
-                "Middle": get_middle_confidence,
-                "Rich": get_rich_confidence,
+                "Poor Grievance": lambda m : self.measure_poor_grievance(m),
+                "Middle Grievance": lambda m : self.measure_middle_grievance(m),
+                "Rich Grievance": lambda m : self.measure_rich_grievance(m),
+                "Calm" : lambda m : self.count_calm(m),
+                "Revolt" : lambda m : self.count_revolt(m),
+                "Jail" : lambda m : self.count_jailed(m),
+                "Cops" : lambda m : self.count_cops(m),
+                "Rich Wealth": lambda m : self.measure_rich_wealth(m),
+                "Middle Wealth": lambda m : self.measure_middle_wealth(m),
+                "Poor Wealth": lambda m : self.measure_poor_wealth(m),
+                "Rich Confidence": lambda m : self.measure_rich_confidence(m),
+                "Middle Confidence": lambda m : self.measure_middle_confidence(m),
+                "Poor Confidence": lambda m : self.measure_poor_confidence(m),
             }
         )
 
@@ -239,28 +185,6 @@ class World(Model):
             ]
         )
 
-    def update_core(self):
-        
-        # Updated the core paramenters
-        # (corruption, democracy and employment)
-        # using reduction_constant.
-        
-        if self.c_state:
-            if self.corruption < 1.0:
-                self.corruption += self.reduction_constant
-            else:
-                self.corruption = 1.0
-        if self.d_state:
-            if self.democracy > 0.0:
-                self.democracy -= self.reduction_constant
-            else:
-                self.democracy = 0.0
-        if self.e_state:
-            if self.employment > 0.0:
-                self.employment -= self.reduction_constant
-            else:
-                self.employment = 0.0
-
     def mean_wealth(self):
         
         # Calculate the mean wealth of all the citizen agents
@@ -271,6 +195,13 @@ class World(Model):
             if agent.alignment == "Citizen"
         ]
         self.mean = s.mean(self.agents)
+    
+    def update_core(self):
+        if self.l_state:
+            if self.legitimacy > 0.0:
+                self.legitimacy -= self.reduction_constant
+            else:
+                self.legitimacy = 0.0
 
     def step(self):
         
@@ -294,3 +225,117 @@ class World(Model):
         total_agents = self.r_c + self.m_c + self.p_c
         if total_agents < 2:
             self.running = False
+    
+    @staticmethod
+    def count_calm(model):
+        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Calm"])
+        return a
+
+    @staticmethod
+    def count_revolt(model):
+        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Revolt"])
+        return a
+    
+    @staticmethod
+    def count_jailed(model):
+        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Jail"])
+        return a
+
+    @staticmethod
+    def count_cops(model):
+        a = len([a for a in model.schedule.agents if a.alignment == "Cop"])
+        return a
+
+    @staticmethod        
+    def measure_poor_grievance(model):
+
+        confidence = [
+            a.grievance
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Poor"
+        ]
+        if confidence:
+            total = sum(confidence)
+            return total
+        else:
+            return 0
+
+    @staticmethod
+    def measure_middle_grievance(model):        
+        confidence = [
+            a.grievance
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Middle"
+        ]
+        if confidence:
+            total = sum(confidence)
+            return total
+        else:
+            return 0
+
+    @staticmethod
+    def measure_rich_grievance(model):
+        confidence = [
+            a.grievance
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Rich"
+        ]
+        if confidence:
+            total = sum(confidence)
+            return total
+        else:
+            return 0
+    
+    @staticmethod
+    def measure_rich_wealth(model):
+        wealth = [a.poverty for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Rich"]
+        return sum(wealth)
+    
+    @staticmethod
+    def measure_middle_wealth(model):
+        wealth = [a.poverty for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Middle"]
+        return sum(wealth)
+    
+    @staticmethod
+    def measure_poor_wealth(model):
+        wealth = [a.poverty for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Poor"]
+        return sum(wealth)
+    
+    @staticmethod
+    def measure_poor_confidence(model):
+        confidence = [
+            a.confidence
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Poor"
+        ]
+        if confidence:
+            total = s.mean(confidence)
+            return total
+        else:
+            return 0
+
+    @staticmethod
+    def measure_middle_confidence(model):
+        confidence = [
+            a.confidence
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Middle"
+        ]
+        if confidence:
+            total = s.mean(confidence)
+            return total
+        else:
+            return 0
+
+    @staticmethod
+    def measure_rich_confidence(model):
+        confidence = [
+            a.confidence
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Rich"
+        ]
+        if confidence:
+            total = s.mean(confidence)
+            return total
+        else:
+            return 0

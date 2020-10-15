@@ -1,5 +1,5 @@
 from mesa import Agent
-from .params import kill_threshold, cop_threshold, confidence_threshold, r_c
+from .params import kill_threshold, cop_threshold, r_c
 
 # TODO:
 # Changing behaviour based on core parameters
@@ -66,6 +66,8 @@ class Cop(Agent):
                     self.citizens.append(neighbor)
                 elif neighbor.alignment == "Cop":
                     self.cops.append(neighbor)
+        
+        self.revolt_citizens = [a for a in self.citizens if a.state == "Revolt"]
 
     def jail_citizen(self):
         
@@ -76,9 +78,14 @@ class Cop(Agent):
             if i.n_j > kill_threshold:
                 self.model.kill_agents.append(i)
                 self.model.agents_killed += 1
-            elif i.state == "Revolt" and self.random.random() > 0.2:
-                i.state = "Jail"
-                i.movement = False
+            # elif i.state == "Revolt" and self.random.random() > 0.2:
+            #     i.state = "Jail"
+            #     i.movement = False
+        if self.random.random() > self.model.legitimacy:
+            if self.revolt_citizens:
+                r_c = self.random.choice(self.revolt_citizens)
+                r_c.state = "Jail"
+                r_c.movement = False
 
     def vary_behaviour(self):
         #TODO

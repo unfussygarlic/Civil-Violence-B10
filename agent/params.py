@@ -16,12 +16,13 @@ model_params = {
         "slider", "Citizen Density", 0.7, 0, 1, 0.001
     ),
     "agent_type": "Poor",
-    "c_state": UserSettableParameter("checkbox", "Increase Corruption", value=True),
-    "d_state": UserSettableParameter("checkbox", "Decrease Democracy", value=True),
-    "e_state": UserSettableParameter("checkbox", "Decrease Employment", value=True),
+    "legitimacy" : UserSettableParameter("slider", "Legitimacy", 1.0, 0, 1, 0.001),
+    "l_state": UserSettableParameter("checkbox", "Decrease Legitimacy", value=True),
     "reduction_constant": UserSettableParameter(
         "number", "Reduction Constant", value=0.01
     ),
+    "active_threshold": UserSettableParameter("slider", "Active Threshold", 0.2, 0, 1, 0.1),
+    "include_wealth": UserSettableParameter("checkbox", "Include Wealth", value = True)
 }
 
 # Parameter Constants
@@ -33,20 +34,25 @@ k_af = 0.8
 
 # Wealth increment of individual agents
 wealth_inc = {
-    "Rich": np.random.uniform(0, 0.33),
+    "Poor": np.random.uniform(0, 0.33),
     "Middle": np.random.uniform(0.33, 0.66),
-    "Poor": np.random.uniform(0.66, 1.0),
+    "Rich": np.random.uniform(0.66, 1.0),
 }
+
 timestep = 2
 
 # Threshold
-confidence_threshold = 0.7
+confidence_threshold = 0.1
 reduction_factor = 0.01
 cop_threshold = 0.66
 
 # Jail parameters
-jail_period = 5
+jail_period = 30
 kill_threshold = 10
 
 # Agent and Cop choice
 r_c = 0.2
+
+# Vision
+citizen_vision = 1
+cop_vision = 1
