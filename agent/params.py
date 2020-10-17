@@ -17,12 +17,14 @@ model_params = {
     ),
     "agent_type": "Poor",
     "legitimacy" : UserSettableParameter("slider", "Legitimacy", 1.0, 0, 1, 0.001),
-    "l_state": UserSettableParameter("checkbox", "Decrease Legitimacy", value=True),
+    "l_state": UserSettableParameter("checkbox", "Decrease Legitimacy", value=False),
     "reduction_constant": UserSettableParameter(
         "number", "Reduction Constant", value=0.01
     ),
     "active_threshold": UserSettableParameter("slider", "Active Threshold", 0.2, 0, 1, 0.1),
-    "include_wealth": UserSettableParameter("checkbox", "Include Wealth", value = True)
+    "include_wealth": UserSettableParameter("checkbox", "Include Wealth", value = True),
+    "rich_threshold": UserSettableParameter("slider", "Rich Threshold", 10, 1, 20),
+    "reserve_percent": UserSettableParameter("slider", "Reserves", 50, 1, 100)
 }
 
 # Parameter Constants

@@ -13,14 +13,12 @@ from .params import model_params, gridsize, confidence_threshold
 
 
 def agent_portrayal(agent):
-    portrayal = {"Shape": "circle", "Filled": "True", "r": "0.5"}
+    portrayal = {"Shape": "circle", "Filled": "True", "Layer": 0, "r": "0.5"}
 
     if isinstance(agent,Citizen):
         portrayal[
             "Text"
         ] = f"{agent.status} | {round(agent.confidence,2)} | {round(agent.grievance,2)}"
-
-        portrayal["Layer"] = 1
 
         if agent.state == "Revolt":
             portrayal["Color"] = "gray"
@@ -45,7 +43,6 @@ def agent_portrayal(agent):
                 portrayal["Color"] = "blue"
 
     elif agent.alignment == "Cop":
-        portrayal["Layer"] = 0
         portrayal["Text"] = f"Cop {agent.unique_id}"
         portrayal["Color"] = "black"
 

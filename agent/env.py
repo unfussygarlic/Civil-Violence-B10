@@ -2,12 +2,13 @@ import sys
 import random
 import statistics as s
 from mesa import Model
-from mesa.space import Grid
+from mesa.space import MultiGrid
 from mesa.time import SimultaneousActivation
 from mesa.datacollection import DataCollector
 from .people import Citizen
 from .authority import Cop
 from .params import reduction_factor
+from .business import Bank
 
 
 class World(Model):
@@ -37,7 +38,9 @@ class World(Model):
         l_state,
         reduction_constant,
         active_threshold,
-        include_wealth
+        include_wealth,
+        rich_threshold,
+        reserve_percent
     ):
         
         # Create a new World instance.
@@ -64,6 +67,8 @@ class World(Model):
         self.reduction_constant = reduction_constant
         self.active_threshold = active_threshold
         self.include_wealth = include_wealth
+        self.rich_threshold = rich_threshold
+        self.reserve_percent = reserve_percent
 
         self.ap_constant = 2.3
 
@@ -78,7 +83,7 @@ class World(Model):
         self.mean = 0
         self.kill_agents = []
         self.agents_killed = 0
-        self.grid = Grid(gridsize, gridsize, False)
+        self.grid = MultiGrid(gridsize, gridsize, False)
         self.schedule = SimultaneousActivation(self)
         self.placement(gridsize)
         self.running = True
@@ -90,10 +95,12 @@ class World(Model):
         # Arguments:
         # gridsize: Dimensions of grid
         
-        unique_id = 0
+        unique_id = 1
 
         if self.cop_density + self.citizen_density > 1:
             print("Density ratios must not exceed 1", file=sys.stderr)
+
+        self.bank = Bank(1, self, self.reserve_percent)
 
         for (_, x, y) in self.grid.coord_iter():
 
@@ -105,9 +112,12 @@ class World(Model):
 
             elif self.random.random() < (self.cop_density + self.citizen_density):
                 a = Citizen(unique_id, 
+                            (x,y),
                             self,
                             hardship = self.random.random(), 
-                            risk_aversion = self.random.random())
+                            risk_aversion = self.random.random(),
+                            bank = self.bank,
+                            rich_threshold = self.rich_threshold)
                 self.schedule.add(a)
                 self.grid.place_agent(a, (x, y))
                 unique_id += 1
@@ -190,7 +200,7 @@ class World(Model):
         # Calculate the mean wealth of all the citizen agents
         
         self.agents = [
-            agent.wealth
+            agent.savings
             for agent in self.schedule.agents
             if agent.alignment == "Citizen"
         ]
@@ -222,7 +232,7 @@ class World(Model):
                 self.schedule.remove(i)
             self.kill_agents = []
 
-        total_agents = self.r_c + self.m_c + self.p_c
+        total_agents = len([a for a in self.schedule.agents if a.alignment == "Citizen"])
         if total_agents < 2:
             self.running = False
     
@@ -288,18 +298,18 @@ class World(Model):
     
     @staticmethod
     def measure_rich_wealth(model):
-        wealth = [a.poverty for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Rich"]
-        return sum(wealth)
+        wealth = [a.wealth for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Rich"]
+        return s.mean(wealth) if wealth else 0
     
     @staticmethod
     def measure_middle_wealth(model):
-        wealth = [a.poverty for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Middle"]
-        return sum(wealth)
+        wealth = [a.wealth for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Middle"]
+        return s.mean(wealth) if wealth else 0
     
     @staticmethod
     def measure_poor_wealth(model):
-        wealth = [a.poverty for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Poor"]
-        return sum(wealth)
+        wealth = [a.wealth for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Poor"]
+        return s.mean(wealth) if wealth else 0
     
     @staticmethod
     def measure_poor_confidence(model):
