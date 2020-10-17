@@ -136,10 +136,18 @@ class Citizen(Person):
         #     self.model.grid.move_agent(self, pos)
         pos = self.random.choice(self.neighborhood)
         self.model.grid.move_agent(self,pos)
+    
+    def sigmoid(self,x):
+        return 1 / (1 + math.exp(-x))
 
     def measure_confidence(self):
+        
+        if self.model.include_wealth:
+            try:
+                self.hardship =  1- self.sigmoid(self.wealth/self.model.mean)            
+            except ZeroDivisionError:
+                self.hardship = 0
 
-        # corruption, democracy and employment factors
         self.grievance = self.hardship * (1 - self.model.legitimacy)
         alpha = (self.status == "Jail")
 
@@ -154,8 +162,3 @@ class Citizen(Person):
             self.confidence = self.grievance - self.net_risk
         else:
             self.confidence = self.grievance - self.net_risk
-
-        # print(f"{self.status} :: {self.poverty} :: {self.grievance} :: {self.net_risk}")
-        print(f"{self.status} :: {self.savings} :: {self.wealth}")
-    
-    # BANK PART

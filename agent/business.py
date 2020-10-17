@@ -1,18 +1,16 @@
 from mesa import Agent
 
 class Bank(Agent):
-    def __init__(self, unique_id, model, reserve_percent=50):
+    def __init__(self, unique_id, model):
         # initialize the parent class with required parameters
         super().__init__(unique_id, model)
         # for tracking total value of loans outstanding
         self.bank_loans = 0
         """percent of deposits the bank must keep in reserves - this is a
            UserSettableParameter in server.py"""
-        self.reserve_percent = reserve_percent
+        self.giveaway = 0
         # for tracking total value of deposits
         self.deposits = 0
-        # total amount of deposits in reserve
-        self.reserves = (self.reserve_percent / 100) * self.deposits
         # amount the bank is currently able to loan
         self.bank_to_loan = 0
 
@@ -21,9 +19,9 @@ class Bank(Agent):
        see below for Person.balance_books()"""
 
     def bank_balance(self):
-        self.reserves = (self.reserve_percent / 100) * self.deposits
-        self.bank_to_loan = self.deposits - (self.reserves + self.bank_loans)
-
+        # amount the bank willing to loan
+        self.giveaway = self.model.legitimacy * self.deposits
+        self.bank_to_loan = self.deposits - (self.giveaway + self.bank_loans)
 
 class RandomWalker(Agent):
     """
@@ -152,7 +150,9 @@ class Person(RandomWalker):
                 self.withdraw_from_savings(self.savings)
                 self.repay_a_loan(self.wallet)
         # calculate my wealth
-        self.wealth = self.savings - self.loans
+        self.wealth = self.savings * self.model.legitimacy - self.loans
+        if self.wealth == 0.0:
+            self.wealth += 1
 
     # part of balance_books()
     def deposit_to_savings(self, amount):

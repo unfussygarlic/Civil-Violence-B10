@@ -39,6 +39,16 @@ confidence_chart = ChartModule(
     data_collector_name="datacollector",
 )
 
+hardship_chart = ChartModule(
+    [
+        {"Label": "Poor Hardship", "Color": "Red"},
+        {"Label": "Middle Hardship", "Color": "Yellow"},
+        {"Label": "Rich Hardship", "Color": "Green"},
+    ],
+    data_collector_name="datacollector",
+)
+
+
 wealth_chart = ChartModule(
     [
         {"Label": "Poor Wealth", "Color": "Red"},
@@ -55,5 +65,5 @@ pie_chart = PieChartModule([{"Label": "Calm", "Color": "Green"},
 
 grid = CanvasGrid(agent_portrayal, gridsize, gridsize, 500, 500)
 
-server = ModularServer(World, [grid, Core_parameters(), pie_chart, grievance_chart, confidence_chart, wealth_chart], "World", model_params)
+server = ModularServer(World, [grid, Core_parameters(), pie_chart, grievance_chart, hardship_chart, confidence_chart, wealth_chart], "World", model_params)
 server.port = 8521

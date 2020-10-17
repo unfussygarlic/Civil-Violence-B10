@@ -39,8 +39,7 @@ class World(Model):
         reduction_constant,
         active_threshold,
         include_wealth,
-        rich_threshold,
-        reserve_percent
+        rich_threshold
     ):
         
         # Create a new World instance.
@@ -68,7 +67,6 @@ class World(Model):
         self.active_threshold = active_threshold
         self.include_wealth = include_wealth
         self.rich_threshold = rich_threshold
-        self.reserve_percent = reserve_percent
 
         self.ap_constant = 2.3
 
@@ -100,7 +98,7 @@ class World(Model):
         if self.cop_density + self.citizen_density > 1:
             print("Density ratios must not exceed 1", file=sys.stderr)
 
-        self.bank = Bank(1, self, self.reserve_percent)
+        self.bank = Bank(1, self)
 
         for (_, x, y) in self.grid.coord_iter():
 
@@ -137,6 +135,9 @@ class World(Model):
                 "Rich Confidence": lambda m : self.measure_rich_confidence(m),
                 "Middle Confidence": lambda m : self.measure_middle_confidence(m),
                 "Poor Confidence": lambda m : self.measure_poor_confidence(m),
+                "Rich Hardship": lambda m : self.measure_rich_hardship(m),
+                "Middle Hardship": lambda m : self.measure_middle_hardship(m),
+                "Poor Hardship": lambda m : self.measure_poor_hardship(m)
             }
         )
 
@@ -346,6 +347,50 @@ class World(Model):
         ]
         if confidence:
             total = s.mean(confidence)
+            return total
+        else:
+            return 0
+    
+    @staticmethod
+    def measure_total_reserves(model):
+        return s.mean(model.bank.total_reserves)
+    
+    @staticmethod        
+    def measure_poor_hardship(model):
+
+        confidence = [
+            a.hardship
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Poor"
+        ]
+        if confidence:
+            total = sum(confidence)
+            return total
+        else:
+            return 0
+
+    @staticmethod
+    def measure_middle_hardship(model):        
+        confidence = [
+            a.hardship
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Middle"
+        ]
+        if confidence:
+            total = sum(confidence)
+            return total
+        else:
+            return 0
+
+    @staticmethod
+    def measure_rich_hardship(model):
+        confidence = [
+            a.hardship
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Rich"
+        ]
+        if confidence:
+            total = sum(confidence)
             return total
         else:
             return 0
