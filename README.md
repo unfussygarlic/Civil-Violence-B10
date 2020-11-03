@@ -54,17 +54,17 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
     6. Any agent that gets jailed becomes a black square
     
 <p align="center">
-  <img src="./imgs/grid.png" alt="Graph" width="400">
+  <img src="./images/grid.png" alt="Graph" width="400">
 </p>
 
 - The graph which shows the grievance and the number of steps: 
 <p align="center">
-  <img src="./imgs/Graph.png" alt="Graph" width="400">
+  <img src="./images/Graph.png" alt="Graph" width="400">
 </p>
 
 - The parameters used in the experiment: 
 <p align="center">
-  <img src="./imgs/parameters.png" alt="Graph" width="200">
+  <img src="./images/parameters.png" alt="Graph" width="200">
 </p>
 
 
@@ -89,7 +89,7 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 │   ├── people.py
 │   ├── portrayal.py
 │   └── server.py
-├── imgs
+├── images
 │   ├── Graph.png
 │   ├── grid.png
 │   └── parameters.png

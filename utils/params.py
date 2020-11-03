@@ -1,7 +1,16 @@
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
 
+<<<<<<< HEAD:agent/params.py
 gridsize = 25
+=======
+
+# The file contain the parameters that affect the flow of entire experiment.
+
+
+# grid size of one size of the model instance
+gridsize = 50
+>>>>>>> garlic:utils/params.py
 
 model_params = {
     "gridsize": gridsize,
@@ -10,13 +19,23 @@ model_params = {
         "slider", "Citizen Density", 0.7, 0, 1, 0.001
     ),
     "agent_type": "Poor",
+<<<<<<< HEAD:agent/params.py
     "c_state": UserSettableParameter("checkbox", "Increase Corruption", value=True),
     "d_state": UserSettableParameter("checkbox", "Decrease Democracy", value=True),
     "e_state": UserSettableParameter("checkbox", "Decrease Employment", value=True),
     "n_state": UserSettableParameter("checkbox", "Negotiation", value=True),
+=======
+    "legitimacy": UserSettableParameter("slider", "Legitimacy", 1.0, 0.001, 1, 0.001),
+    "l_state": UserSettableParameter("checkbox", "Decrease Legitimacy", value=False),
+>>>>>>> garlic:utils/params.py
     "reduction_constant": UserSettableParameter(
         "number", "Reduction Constant", value=0.01
     ),
+    "active_threshold": UserSettableParameter(
+        "slider", "Active Threshold", 0.2, 0, 1, 0.1
+    ),
+    "include_wealth": UserSettableParameter("checkbox", "Include Wealth", value=True),
+    "rich_threshold": UserSettableParameter("slider", "Rich Threshold", 10, 1, 20),
 }
 
 # Parameter Constants
@@ -28,23 +47,33 @@ k_af = 0.8
 
 # Wealth increment of individual agents
 wealth_inc = {
-    "Rich": np.random.uniform(0, 0.33),
+    "Poor": np.random.uniform(0, 0.33),
     "Middle": np.random.uniform(0.33, 0.66),
-    "Poor": np.random.uniform(0.66, 1.0),
+    "Rich": np.random.uniform(0.66, 1.0),
 }
+
 timestep = 2
 
 # Threshold
-confidence_threshold = 0.7
+confidence_threshold = 0.1
 reduction_factor = 0.01
 cop_threshold = 0.66
 
 # Jail parameters
-jail_period = 5
+jail_period = 30
 kill_threshold = 10
 
+<<<<<<< HEAD:agent/params.py
 #citizen parameters to kill cops 
 # < 0.2 cops survive 
 # > 0.3 cops die after 100 iterations
 angry_threshold = 0.3
 dead_threshold = 15
+=======
+# Agent and Cop choice
+r_c = 0.2
+
+# Vision
+citizen_vision = 1
+cop_vision = 1
+>>>>>>> garlic:utils/params.py
