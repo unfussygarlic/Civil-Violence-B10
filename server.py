@@ -1,63 +1,51 @@
-from .env import World
-from .people import Citizen
-from .params import model_params, gridsize
+from env import World
+from agents.citizen import Citizen
+from utils.params import model_params, gridsize
+from utils.portrayal import agent_portrayal, grievance_portrayal
 from mesa.visualization.modules import CanvasGrid, ChartModule, TextElement, PieChartModule
 from mesa.visualization.ModularVisualization import ModularServer
-from .portrayal import agent_portrayal
 
-# Displaying current level of legitimacy, hardship and risk_aversion in percentage
-# Displaying current count of Rich class people, Middle class people, Poor class people
-
-
-class Core_parameters(TextElement):
-    def render(self, model):
-        legitimacy = model.legitimacy
-
-        text = f"legitimacy: {round(legitimacy*100,2)}%  <br> \
-                Rich count: {model.r_c}({model.r_a_c}) Middle count: {model.m_c}({model.m_a_c}) Poor count: {model.p_c}({model.p_a_c})"
-
-        return text
-
-
-# A graph showing the growth in population with each iteration
-
+# Chart showing the varying grievance levels of agents
 grievance_chart = ChartModule(
     [
         {"Label": "Poor Grievance", "Color": "Red"},
         {"Label": "Middle Grievance", "Color": "Yellow"},
         {"Label": "Rich Grievance", "Color": "Green"},
     ],
-    data_collector_name="datacollector",
+    data_collector_name="datacollector"
 )
 
+# Chart showing the varying confidence levels of agents
 confidence_chart = ChartModule(
     [
         {"Label": "Poor Confidence", "Color": "Red"},
         {"Label": "Middle Confidence", "Color": "Yellow"},
         {"Label": "Rich Confidence", "Color": "Green"},
     ],
-    data_collector_name="datacollector",
+    data_collector_name="datacollector"
 )
 
+# Chart showing the varying hardship levels of agents
 hardship_chart = ChartModule(
     [
         {"Label": "Poor Hardship", "Color": "Red"},
         {"Label": "Middle Hardship", "Color": "Yellow"},
         {"Label": "Rich Hardship", "Color": "Green"},
     ],
-    data_collector_name="datacollector",
+    data_collector_name="datacollector"
 )
 
-
+# Chart showing the varying wealth of agents
 wealth_chart = ChartModule(
     [
         {"Label": "Poor Wealth", "Color": "Red"},
         {"Label": "Middle Wealth", "Color": "Yellow"},
         {"Label": "Rich Wealth", "Color": "Green"},
     ],
-    data_collector_name="datacollector",
+    data_collector_name="datacollector"
 )
 
+# Chart showing the overall count agents
 citizen_count_chart = ChartModule(
     [
         {"Label": "Poor", "Color": "Red"},
@@ -66,13 +54,10 @@ citizen_count_chart = ChartModule(
         {"Label": "Legitimacy", "Color": "Blue"},
         {"Label": "Cops", "Color": "Black"}
     ],
-    data_collector_name="datacollector",
+    data_collector_name="datacollector"
 )
 
-# pie_chart = PieChartModule([{"Label": "Calm", "Color": "Green"},
-#                             {"Label": "Revolt", "Color": "Red"},
-#                             {"Label": "Jail", "Color": "Black"}], 200, 500)
-
+# Chart showing the state of agents when wealth is not included
 without_chart = ChartModule([{"Label": "WO Calm", "Color": "Green"},
                             {"Label": "WO Revolt", "Color": "Red"},
                             {"Label": "WO Jail", "Color": "Gray"},
@@ -80,15 +65,20 @@ without_chart = ChartModule([{"Label": "WO Calm", "Color": "Green"},
                             {"Label": "Legitimacy", "Color": "Blue"}],
                             data_collector_name="datacollector")
 
-pie_chart = ChartModule([{"Label": "Calm", "Color": "Green"},
+# Chart showing the state of agents when wealth is included
+state_chart = ChartModule([{"Label": "Calm", "Color": "Green"},
                             {"Label": "Revolt", "Color": "Red"},
                             {"Label": "Jail", "Color": "Gray"},
                             {"Label": "Cops", "Color": "Black"},
                             {"Label": "Legitimacy", "Color": "Blue"}],
                             data_collector_name="datacollector")
 
-
+# Main grid showcasing the simulation of agents
 grid = CanvasGrid(agent_portrayal, gridsize, gridsize, 500, 500)
+# Grievance grid potratying the varying grievance levels of agents
+grievance_grid = CanvasGrid(grievance_portrayal, gridsize, gridsize, 500, 500)
 
-server = ModularServer(World, [grid, Core_parameters(), pie_chart, citizen_count_chart, grievance_chart, hardship_chart, wealth_chart, without_chart], "World", model_params)
+# Initializing the environment and placement of grids
+server = ModularServer(World, [grid, grievance_grid, state_chart, citizen_count_chart, grievance_chart, hardship_chart, wealth_chart, without_chart], "World", model_params)
+# Port number for visualization
 server.port = 8521

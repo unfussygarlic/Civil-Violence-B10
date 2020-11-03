@@ -4,7 +4,9 @@
 
 # python auto generated files 
 __pycache__
-agent/__pycache__
+utils/__pycache__
+agents/__pycache__
+__pycache__
 
 # local virtual env directories
 cv

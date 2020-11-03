@@ -6,7 +6,7 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 
 # grid size of one size of the model instance
-gridsize = 25
+gridsize = 50
 
 # model instance parameters
 model_params = {

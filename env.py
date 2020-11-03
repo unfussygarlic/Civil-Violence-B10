@@ -5,11 +5,9 @@ from mesa import Model
 from mesa.space import MultiGrid
 from mesa.time import SimultaneousActivation
 from mesa.datacollection import DataCollector
-from .people import Citizen
-from .authority import Cop
-from .params import reduction_factor
-from .business import Bank
-
+from agents.citizen import Citizen
+from agents.authority import Cop, Bank
+from utils.params import reduction_factor
 
 class World(Model):
     """
@@ -110,7 +108,6 @@ class World(Model):
 
             elif self.random.random() < (self.cop_density + self.citizen_density):
                 a = Citizen(unique_id, 
-                            (x,y),
                             self,
                             hardship = self.random.random(), 
                             risk_aversion = self.random.random(),
@@ -231,8 +228,6 @@ class World(Model):
         self.schedule.step()
         self.update_core()
 
-        # Code from stackoverflow. Stuart Ball'answered in
-        # https://stackoverflow.com/questions/62821720/deleting-agent-in-mesa
         if self.kill_agents:
             self.kill_agents = list(dict.fromkeys(self.kill_agents))
             for i in self.kill_agents:
