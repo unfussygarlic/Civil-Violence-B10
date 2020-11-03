@@ -2,6 +2,7 @@ from mesa import Agent
 import sys
 from utils.params import kill_threshold, cop_threshold, r_c
 
+
 class Bank(Agent):
     """
     A central authority agent whose task is to update it's reserves
@@ -11,6 +12,7 @@ class Bank(Agent):
         unique_id: Every agent has a unique id allowing them to perform individual tasks
         model: World model
     """
+
     def __init__(self, unique_id, model):
         # initialize the parent class with required parameters
         super().__init__(unique_id, model)
@@ -33,9 +35,10 @@ class Bank(Agent):
         self.giveaway = self.model.legitimacy * self.deposits
         self.bank_to_loan = self.deposits - (self.giveaway + self.bank_loans)
 
+
 class Cop(Agent):
 
-    """    
+    """
     A central authority agent whose task to capture or eliminate revolting citizen.
     Rule: Eliminate citizen if it is revolting and has been jailed a set number of
     times before, else jail the citizen for set amount of time and increase the
@@ -45,17 +48,16 @@ class Cop(Agent):
         unique_id: unique int indentifier of the agent
         model: model instance under which the agent is running
     """
-    
 
     def __init__(self, unique_id, model):
-        
-     #  Initialize the Cop agent with a unique_id and the model instance
-      
+
+        #  Initialize the Cop agent with a unique_id and the model instance
+
         super().__init__(unique_id, model)
         self.alignment = "Cop"
 
     def move(self):
-        """ 
+        """
         Move the agent to a new empty position on the grid
         """
         if self.empty_cells:
@@ -79,14 +81,14 @@ class Cop(Agent):
                     self.citizens.append(neighbor)
                 elif neighbor.alignment == "Cop":
                     self.cops.append(neighbor)
-        
+
         self.revolt_citizens = [a for a in self.citizens if a.state == "Revolt"]
 
     def jail_citizen(self):
-        
+
         # Jail or eliminate the citizen based on the number of times a citizen
         # has been jailed before
-        
+
         for i in self.citizens:
             if i.n_j > kill_threshold:
                 self.model.kill_agents.append(i)
@@ -99,15 +101,6 @@ class Cop(Agent):
                 r_c = self.random.choice(self.revolt_citizens)
                 r_c.state = "Jail"
                 r_c.movement = False
-
-    def vary_behaviour(self):
-        #TODO
-        pass
-
-    def negotiation(self):
-        #TODO
-        pass
-
 
     def step(self):
         """

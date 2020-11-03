@@ -9,6 +9,7 @@ from agents.citizen import Citizen
 from agents.authority import Cop, Bank
 from utils.params import reduction_factor
 
+
 class World(Model):
     """
     The class World which inherits from Model and is responsible for the
@@ -37,9 +38,9 @@ class World(Model):
         reduction_constant,
         active_threshold,
         include_wealth,
-        rich_threshold
+        rich_threshold,
     ):
-        
+
         # Create a new World instance.
 
         # Args:
@@ -52,7 +53,6 @@ class World(Model):
         #    e_state: the employment state
         #    reduction_constant: the constant attribute which decide by what rate
         #        the state of c_state, d_state, & e_state will reduce
-        
 
         self.cop_density = cop_density
         self.citizen_density = citizen_density
@@ -85,12 +85,12 @@ class World(Model):
         self.running = True
 
     def placement(self, gridsize):
-        
+
         # Placement of agents inside the Grid
 
         # Arguments:
         # gridsize: Dimensions of grid
-        
+
         unique_id = 1
 
         if self.cop_density + self.citizen_density > 1:
@@ -107,48 +107,50 @@ class World(Model):
                 unique_id += 1
 
             elif self.random.random() < (self.cop_density + self.citizen_density):
-                a = Citizen(unique_id, 
-                            self,
-                            hardship = self.random.random(), 
-                            risk_aversion = self.random.random(),
-                            bank = self.bank,
-                            rich_threshold = self.rich_threshold)
+                a = Citizen(
+                    unique_id,
+                    self,
+                    hardship=self.random.random(),
+                    risk_aversion=self.random.random(),
+                    bank=self.bank,
+                    rich_threshold=self.rich_threshold,
+                )
                 self.schedule.add(a)
                 self.grid.place_agent(a, (x, y))
                 unique_id += 1
 
         self.datacollector = DataCollector(
             model_reporters={
-                "Poor Grievance": lambda m : self.measure_poor_grievance(m),
-                "Middle Grievance": lambda m : self.measure_middle_grievance(m),
-                "Rich Grievance": lambda m : self.measure_rich_grievance(m),
-                "Calm" : lambda m : self.count_calm(m),
-                "Revolt" : lambda m : self.count_revolt(m),
-                "Jail" : lambda m : self.count_jailed(m),
-                "Cops" : lambda m : self.count_cops(m),
-                "Rich" : lambda m : self.count_rich(m),
-                "Middle" : lambda m : self.count_middle(m),
-                "Poor" : lambda m : self.count_poor(m),
-                "Rich Wealth": lambda m : self.measure_rich_wealth(m),
-                "Middle Wealth": lambda m : self.measure_middle_wealth(m),
-                "Poor Wealth": lambda m : self.measure_poor_wealth(m),
-                "Rich Confidence": lambda m : self.measure_rich_confidence(m),
-                "Middle Confidence": lambda m : self.measure_middle_confidence(m),
-                "Poor Confidence": lambda m : self.measure_poor_confidence(m),
-                "Rich Hardship": lambda m : self.measure_rich_hardship(m),
-                "Middle Hardship": lambda m : self.measure_middle_hardship(m),
-                "Poor Hardship": lambda m : self.measure_poor_hardship(m),
-                "Legitimacy": lambda m : self.measure_legitimacy(m),
-                "WO Revolt": lambda m : self.wo_wealth_active(m),
-                "WO Calm": lambda m : self.wo_wealth_calm(m),
-                "WO Jail": lambda m : self.wo_wealth_jail(m)
+                "Poor Grievance": lambda m: self.measure_poor_grievance(m),
+                "Middle Grievance": lambda m: self.measure_middle_grievance(m),
+                "Rich Grievance": lambda m: self.measure_rich_grievance(m),
+                "Calm": lambda m: self.count_calm(m),
+                "Revolt": lambda m: self.count_revolt(m),
+                "Jail": lambda m: self.count_jailed(m),
+                "Cops": lambda m: self.count_cops(m),
+                "Rich": lambda m: self.count_rich(m),
+                "Middle": lambda m: self.count_middle(m),
+                "Poor": lambda m: self.count_poor(m),
+                "Rich Wealth": lambda m: self.measure_rich_wealth(m),
+                "Middle Wealth": lambda m: self.measure_middle_wealth(m),
+                "Poor Wealth": lambda m: self.measure_poor_wealth(m),
+                "Rich Confidence": lambda m: self.measure_rich_confidence(m),
+                "Middle Confidence": lambda m: self.measure_middle_confidence(m),
+                "Poor Confidence": lambda m: self.measure_poor_confidence(m),
+                "Rich Hardship": lambda m: self.measure_rich_hardship(m),
+                "Middle Hardship": lambda m: self.measure_middle_hardship(m),
+                "Poor Hardship": lambda m: self.measure_poor_hardship(m),
+                "Legitimacy": lambda m: self.measure_legitimacy(m),
+                "WO Revolt": lambda m: self.wo_wealth_active(m),
+                "WO Calm": lambda m: self.wo_wealth_calm(m),
+                "WO Jail": lambda m: self.wo_wealth_jail(m),
             }
         )
 
     def update_agent_count(self):
-        
+
         # Updates the number of current and active agents
-        
+
         self.r_c = len(
             [
                 a
@@ -201,16 +203,16 @@ class World(Model):
         )
 
     def mean_wealth(self):
-        
+
         # Calculate the mean wealth of all the citizen agents
-        
+
         self.agents = [
             agent.savings
             for agent in self.schedule.agents
             if agent.alignment == "Citizen"
         ]
         self.mean = s.mean(self.agents)
-    
+
     def update_core(self):
         if self.l_state:
             if self.legitimacy > 0.0:
@@ -219,9 +221,9 @@ class World(Model):
                 self.legitimacy = 0.0
 
     def step(self):
-        
-       # Calculation of world attributes in one step(iteration) of execution
-        
+
+        # Calculation of world attributes in one step(iteration) of execution
+
         self.update_agent_count()
         self.datacollector.collect(self)
         self.mean_wealth()
@@ -235,23 +237,43 @@ class World(Model):
                 self.schedule.remove(i)
             self.kill_agents = []
 
-        total_agents = len([a for a in self.schedule.agents if a.alignment == "Citizen"])
+        total_agents = len(
+            [a for a in self.schedule.agents if a.alignment == "Citizen"]
+        )
         if total_agents < 2:
             self.running = False
-    
+
     @staticmethod
     def count_calm(model):
-        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Calm"])
+        a = len(
+            [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.state == "Calm"
+            ]
+        )
         return a
 
     @staticmethod
     def count_revolt(model):
-        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Revolt"])
+        a = len(
+            [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.state == "Revolt"
+            ]
+        )
         return a
-    
+
     @staticmethod
     def count_jailed(model):
-        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Jail"])
+        a = len(
+            [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.state == "Jail"
+            ]
+        )
         return a
 
     @staticmethod
@@ -261,20 +283,38 @@ class World(Model):
 
     @staticmethod
     def count_rich(model):
-        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Rich"])
-        return a
-    
-    @staticmethod
-    def count_middle(model):
-        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Middle"])
-        return a
-    
-    @staticmethod
-    def count_poor(model):
-        a = len([a for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Poor"])
+        a = len(
+            [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.status == "Rich"
+            ]
+        )
         return a
 
-    @staticmethod        
+    @staticmethod
+    def count_middle(model):
+        a = len(
+            [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.status == "Middle"
+            ]
+        )
+        return a
+
+    @staticmethod
+    def count_poor(model):
+        a = len(
+            [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.status == "Poor"
+            ]
+        )
+        return a
+
+    @staticmethod
     def measure_poor_grievance(model):
         if model.include_wealth:
             confidence = [
@@ -288,11 +328,13 @@ class World(Model):
             else:
                 return 0
         else:
-            confidence = [a.grievance for a in model.schedule.agents if a.alignment == "Citizen"]
+            confidence = [
+                a.grievance for a in model.schedule.agents if a.alignment == "Citizen"
+            ]
             return sum(confidence)
 
     @staticmethod
-    def measure_middle_grievance(model):        
+    def measure_middle_grievance(model):
         confidence = [
             a.grievance
             for a in model.schedule.agents
@@ -316,22 +358,34 @@ class World(Model):
             return total
         else:
             return 0
-    
+
     @staticmethod
     def measure_rich_wealth(model):
-        wealth = [a.wealth for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Rich"]
+        wealth = [
+            a.wealth
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Rich"
+        ]
         return s.mean(wealth) if wealth else 0
-    
+
     @staticmethod
     def measure_middle_wealth(model):
-        wealth = [a.wealth for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Middle"]
+        wealth = [
+            a.wealth
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Middle"
+        ]
         return s.mean(wealth) if wealth else 0
-    
+
     @staticmethod
     def measure_poor_wealth(model):
-        wealth = [a.wealth for a in model.schedule.agents if a.alignment == "Citizen" and a.status == "Poor"]
+        wealth = [
+            a.wealth
+            for a in model.schedule.agents
+            if a.alignment == "Citizen" and a.status == "Poor"
+        ]
         return s.mean(wealth) if wealth else 0
-    
+
     @staticmethod
     def measure_poor_confidence(model):
         confidence = [
@@ -370,12 +424,12 @@ class World(Model):
             return total
         else:
             return 0
-    
+
     @staticmethod
     def measure_total_reserves(model):
         return s.mean(model.bank.total_reserves)
-    
-    @staticmethod        
+
+    @staticmethod
     def measure_poor_hardship(model):
 
         confidence = [
@@ -390,7 +444,7 @@ class World(Model):
             return 0
 
     @staticmethod
-    def measure_middle_hardship(model):        
+    def measure_middle_hardship(model):
         confidence = [
             a.hardship
             for a in model.schedule.agents
@@ -414,31 +468,43 @@ class World(Model):
             return total
         else:
             return 0
-    
+
     @staticmethod
     def measure_legitimacy(model):
         return model.legitimacy * 100
-    
+
     @staticmethod
     def wo_wealth_active(model):
         if model.include_wealth == False:
-            active = [a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Revolt"]
+            active = [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.state == "Revolt"
+            ]
             return len(active)
         else:
             return 0
-    
+
     @staticmethod
     def wo_wealth_calm(model):
         if model.include_wealth == False:
-            active = [a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Calm"]
+            active = [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.state == "Calm"
+            ]
             return len(active)
         else:
             return 0
-    
+
     @staticmethod
     def wo_wealth_jail(model):
         if model.include_wealth == False:
-            active = [a for a in model.schedule.agents if a.alignment == "Citizen" and a.state == "Jail"]
+            active = [
+                a
+                for a in model.schedule.agents
+                if a.alignment == "Citizen" and a.state == "Jail"
+            ]
             return len(active)
         else:
             return 0

@@ -16,13 +16,13 @@ RICH_COLOR = "#b30000"
 MIDDLE_COLOR = "#ff0000"
 POOR_COLOR = "#ffa64d"
 COP_COLOR = "#000000"
-GRIEVANCE_GRAD = linear_gradient("#ffffb7", "#9b870d", n = 100)["hex"]
+GRIEVANCE_GRAD = linear_gradient("#ffffb7", "#9b870d", n=100)["hex"]
 
 
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Filled": "True", "Layer": 0, "r": "0.5"}
 
-    if isinstance(agent,Citizen):
+    if isinstance(agent, Citizen):
         portrayal[
             "Text"
         ] = f"{agent.status} | {round(agent.confidence,2)} | {round(agent.grievance,2)}"
@@ -55,22 +55,26 @@ def agent_portrayal(agent):
 
     return portrayal
 
-def grievance_portrayal(agent):
-    portrayal = {"Shape": "rect",
-                 "x": agent.pos[0], "y": agent.pos[1],
-                 "Layer": 0,
-                 "Filled": "true"}
 
-    if isinstance(agent,Citizen):
+def grievance_portrayal(agent):
+    portrayal = {
+        "Shape": "rect",
+        "x": agent.pos[0],
+        "y": agent.pos[1],
+        "Layer": 0,
+        "Filled": "true",
+    }
+
+    if isinstance(agent, Citizen):
         grievance_value = int(agent.grievance * 100)
         color = GRIEVANCE_GRAD[grievance_value]
-        portrayal['Color'] = color 
-        portrayal['w'] = 0.75
-        portrayal['h'] = 0.75
+        portrayal["Color"] = color
+        portrayal["w"] = 0.75
+        portrayal["h"] = 0.75
 
     elif agent.alignment == "Cop":
-        portrayal['w'] = 0.75
-        portrayal['h'] = 0.75
+        portrayal["w"] = 0.75
+        portrayal["h"] = 0.75
         portrayal["Color"] = COP_COLOR
 
     return portrayal

@@ -16,13 +16,15 @@ model_params = {
         "slider", "Citizen Density", 0.7, 0, 1, 0.001
     ),
     "agent_type": "Poor",
-    "legitimacy" : UserSettableParameter("slider", "Legitimacy", 1.0, 0.001, 1, 0.001),
+    "legitimacy": UserSettableParameter("slider", "Legitimacy", 1.0, 0.001, 1, 0.001),
     "l_state": UserSettableParameter("checkbox", "Decrease Legitimacy", value=False),
     "reduction_constant": UserSettableParameter(
         "number", "Reduction Constant", value=0.01
     ),
-    "active_threshold": UserSettableParameter("slider", "Active Threshold", 0.2, 0, 1, 0.1),
-    "include_wealth": UserSettableParameter("checkbox", "Include Wealth", value = True),
+    "active_threshold": UserSettableParameter(
+        "slider", "Active Threshold", 0.2, 0, 1, 0.1
+    ),
+    "include_wealth": UserSettableParameter("checkbox", "Include Wealth", value=True),
     "rich_threshold": UserSettableParameter("slider", "Rich Threshold", 10, 1, 20),
 }
 
