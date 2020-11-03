@@ -58,12 +58,37 @@ wealth_chart = ChartModule(
     data_collector_name="datacollector",
 )
 
+citizen_count_chart = ChartModule(
+    [
+        {"Label": "Poor", "Color": "Red"},
+        {"Label": "Middle", "Color": "Yellow"},
+        {"Label": "Rich", "Color": "Green"},
+        {"Label": "Legitimacy", "Color": "Blue"},
+        {"Label": "Cops", "Color": "Black"}
+    ],
+    data_collector_name="datacollector",
+)
 
-pie_chart = PieChartModule([{"Label": "Calm", "Color": "Green"},
+# pie_chart = PieChartModule([{"Label": "Calm", "Color": "Green"},
+#                             {"Label": "Revolt", "Color": "Red"},
+#                             {"Label": "Jail", "Color": "Black"}], 200, 500)
+
+without_chart = ChartModule([{"Label": "WO Calm", "Color": "Green"},
+                            {"Label": "WO Revolt", "Color": "Red"},
+                            {"Label": "WO Jail", "Color": "Gray"},
+                            {"Label": "Cops", "Color": "Black"},
+                            {"Label": "Legitimacy", "Color": "Blue"}],
+                            data_collector_name="datacollector")
+
+pie_chart = ChartModule([{"Label": "Calm", "Color": "Green"},
                             {"Label": "Revolt", "Color": "Red"},
-                            {"Label": "Jail", "Color": "Black"}], 200, 500)
+                            {"Label": "Jail", "Color": "Gray"},
+                            {"Label": "Cops", "Color": "Black"},
+                            {"Label": "Legitimacy", "Color": "Blue"}],
+                            data_collector_name="datacollector")
+
 
 grid = CanvasGrid(agent_portrayal, gridsize, gridsize, 500, 500)
 
-server = ModularServer(World, [grid, Core_parameters(), pie_chart, grievance_chart, hardship_chart, confidence_chart, wealth_chart], "World", model_params)
+server = ModularServer(World, [grid, Core_parameters(), pie_chart, citizen_count_chart, grievance_chart, hardship_chart, wealth_chart, without_chart], "World", model_params)
 server.port = 8521
