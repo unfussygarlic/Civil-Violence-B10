@@ -69,11 +69,13 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 
 
 ## Files
-- `agent/authority.py` : Contains Cops/Central authority agent class.
-- `agent/env.py` : Primary environment in which placement and operations of agents take place.
-- `agent/params.py` : Parameters including sliders and various constants.
-- `agent/people.py` : Contains Citizen agent class.
-- `agent/server.py` : Sets up server and visualization.
+- `agents/authority.py` : Contains Cops/Central authority agent class.
+- `agents/citizen.py` : Contains Citizen agent class.
+- `utils/gradient.py` : show the grievance levels of agents. Only for display.
+- `utils/params.py` : Parameters including sliders and various constants.
+- `utils/portrayal.py` : Descriptions of colors agents will take.
+- `env.py` : Primary environment in which placement and operations of agents take place.
+- `server.py` : Sets up server and visualization.
 - `run.py` : Opens the server and port for visualization.
 
 
