@@ -81,18 +81,21 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 ```shell
 .
 ├── README.md
-├── agent
+├── agents
 │   ├── __init__.py
 │   ├── authority.py
-│   ├── env.py
-│   ├── params.py
-│   ├── people.py
-│   ├── portrayal.py
-│   └── server.py
+│   └── citizen.py
 ├── images
 │   ├── Graph.png
 │   ├── grid.png
 │   └── parameters.png
+├── utils
+│   ├── __init__.py
+│   ├── gradient.py
+│   ├── params.py
+│   └── portrayal.py
 ├── requirements.txt
+└── env.py
 └── run.py
+└── server.py
 ```
