@@ -1,6 +1,9 @@
 # Modelling civil disobedience using wealth in agents
 
-We are trying to model the grievance behaviour of citizens as a measure of varying parameters such as legitimacy, wealth, and hardship. We would then deduce what amount of central forces are required to control the active agents. We aim to model the agents' behaviour in the presence of cops and how they become active or inactive as a measure of their risk aversion and their surrounding agents' total grievance. Finally, we also try to understand if wealth can also play a role in agents' civil disobedience.
+One of the primary factors affecting the modern world is wealth. Wealth can be a crucial differentiating factor among citizens in social unrest. 
+In this implementation, our goal is to understand the relationship that wealth holds with civil violence and unrest. 
+The social simulation is built on Joshua Epstein's [paper](https://www.pnas.org/content/99/suppl_3/7243) and contain two agents, 'cops' and 'citizens'.
+Thus with the introduction of our 'wealth' parameter, we experiment and realise the relation between wealth and how it influences any citizen's grievance.
 
 ## Table of content
 
@@ -19,7 +22,7 @@ We are trying to model the grievance behaviour of citizens as a measure of varyi
 
 ## Implementation Description
 
-In the beta implementation, there are two main agents(i.e. Citizen and Cops). The task of Citizen is to revolt if the grievance is above a threshold and the task of Cops is to imprison the citizen who is in revolt state. The Cops can also eliminate the citizen based on the number of times it has been imprisoned in the past.
+There are two main agents(i.e. Citizen and Cops). The task of Citizen is to revolt if the grievance is above a threshold and the task of Cops is to imprison the citizens who are in revolt state. The Cops can also eliminate the citizen based on the number of times it has been imprisoned in the past and similarly citizens can also eliminate cops if conditions favour.
 
 There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which essentially tell us about the economic status of that agent. Simultaneously, the parameters that affect the Citizen are **Hardship, Legitimacy, Wealth**.
 
@@ -27,8 +30,8 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 
 - **Citizen**
 
-  Citizens are the core agents whose behaviour is varied during each time step depending on the change in behaviour of Central authority. The simulation is initially filled with a
-  certain population ratio of citizens of varying economic status. The property of Citizen is:
+  Citizens are the core agents whose behaviour is varied during each time step depending on the change in behaviour of Central authority. 
+  The simulation is initially filled with a certain population ratio of citizens of varying economic status. The property of Citizen is:
     - It can revolt against the Central Authority
     - The grievance of a citizen is decided by the three global parameters(i.e. Legitimacy, Hardship, Wealth), its economic status, its confidence.
     - It can inspect up to a certain number of cells in each direction (N, S, E and W).
