@@ -1,6 +1,6 @@
-"""
-Code by KindaSorta : https://stackoverflow.com/questions/59132840/python-continuous-colour-grading
-"""
+#Code by KindaSorta : https://stackoverflow.com/questions/59132840/python-continuous-colour-grading
+#showing the grievance among agents, only for displaying purposes
+
 def hex_to_RGB(hex):
     """ "#FFFFFF" -> [255,255,255] """
     # Pass 16 to the integer function for change of base
