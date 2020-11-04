@@ -55,7 +55,7 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
     6. Any agent that gets jailed becomes a black square
     
 <p align="center">
-  <img src="./images/grid1.PNG" alt="Graph" width="400">
+  <img src="./images/grid.PNG" alt="Graph" width="400">
 </p>
 <p align="center">
   <img src="./images/grid2.PNG" alt="Graph" width="400">
