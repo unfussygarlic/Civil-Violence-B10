@@ -57,9 +57,8 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 <p align="center">
   <img src="./images/grid.PNG" alt="Graph" width="400">
 </p>
+
 - The grid shows grievance levels of citizen. For display purpose only:
-
-
 <p align="center">
   <img src="./images/grid2.PNG" alt="Graph" width="400">
 </p>
