@@ -41,6 +41,22 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
     - Jail revolting citizen
     - Eliminate excessive revolting citizen based on a threshold(*kill_threshold*).
 
+## Parameters
+<p align="center">
+  <img src="./images/parameters.PNG" alt="Graph" width="200">
+</p>
+
+- **Cop Density** describes the amount of cops deployed in the experiment.
+
+- **Citizen Density** describes the amount of citizen agents in the scene.
+
+- **Legitimacy** describes how legitimate the central authority acts.
+
+- **Reduction Constant** specifies the constant by which the legitimacy is decreased in an experiment to test different scenarios surrounding it.
+
+- **Include Wealth** is a toggle switch which provides a way to introduct our wealth parameter in the experiment.
+
+
 ## Results
 
 - The grid at one step in the experiment:
@@ -67,12 +83,6 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 <p align="center">
   <img src="./images/grievance.PNG" alt="Graph" width="400">
 </p>
-
-- The parameters used in the experiment: 
-<p align="center">
-  <img src="./images/parameters.PNG" alt="Graph" width="200">
-</p>
-
 
 ## Files
 - `agents/authority.py` : Contains Cops/Central authority agent class.
