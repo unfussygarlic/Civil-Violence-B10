@@ -20,11 +20,9 @@ class World(Model):
       cop_density: density of the cops placed in world
       citizen_density: density of the citizens in world
       agent_type: the alignment of agent either as cop or citizen
-      c_state: the legitimacy state in world
-      d_state: the democracy state in world
-      e_state: the employment state in world
+      l_state: the legitimacy state in world
       reduction_constant: the constant attribute which decide by what rate
-      the state of c_state, d_state, & e_state will reduce
+      the state of l_state will reduce
     """
 
     def __init__(
@@ -48,11 +46,9 @@ class World(Model):
         #    cop_density: density of cops to be placed
         #    citizen_density: density of citizens to be placed
         #    agent_type: the alignment of agent either as cop or citizen
-        #    c_state: the legitimacy state
-        #    d_state: the democracy state
-        #    e_state: the employment state
+        #    l_state: the legitimacy state
         #    reduction_constant: the constant attribute which decide by what rate
-        #        the state of c_state, d_state, & e_state will reduce
+        #        the state of l_state will reduce
 
         self.cop_density = cop_density
         self.citizen_density = citizen_density
@@ -68,7 +64,7 @@ class World(Model):
 
         self.ap_constant = 2.3
 
-        # Agent count r_c: rich_count, r_a_c: rich_active_count ...
+        # Agent count r_c: rich_count, r_a_c: rich_active_count, m_c: middle_count, m_a_c: middle_active_count, p_c: poor_count, p_a_c: poor_active_count,.
         self.r_c = 0
         self.r_a_c = 0
         self.m_c = 0
