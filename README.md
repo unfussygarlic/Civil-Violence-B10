@@ -1,6 +1,6 @@
 # Modelling civil disobedience using wealth in agents
 
-We are trying to model the grievance behaviour of citizens as a measure of varying parameters such as democracy, wealth, employment and corruption. We would then deduce what amount of central forces are required to control the active agents. We aim to model the agents' behaviour in the presence of cops and how they become active or inactive as a measure of their risk aversion and their surrounding agents' total grievance. Finally, we also try to understand if wealth can also play a role in agents' civil disobedience.
+We are trying to model the grievance behaviour of citizens as a measure of varying parameters such as legitimacy, wealth, and hardship. We would then deduce what amount of central forces are required to control the active agents. We aim to model the agents' behaviour in the presence of cops and how they become active or inactive as a measure of their risk aversion and their surrounding agents' total grievance. Finally, we also try to understand if wealth can also play a role in agents' civil disobedience.
 
 ## Table of content
 
@@ -30,9 +30,10 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
   Citizens are the core agents whose behaviour is varied during each time step depending on the change in behaviour of Central authority. The simulation is initially filled with a
   certain population ratio of citizens of varying economic status. The property of Citizen is:
     - It can revolt against the Central Authority
-    - The grievance of a citizen is decided by the three global parameters(i.e. Democracy, Employment, Corruption), its economic status, its confidence.
+    - The grievance of a citizen is decided by the three global parameters(i.e. Legitimacy, Hardship, Wealth), its economic status, its confidence.
     - It can inspect up to a certain number of cells in each direction (N, S, E and W).
-    - It can perceive its neighbour(as citizen or cops)
+    - It can perceive its neighbour(as citizen or cops).
+    - Agents cop can be eliminated if they are outnumbered by revolting citizen under given conditions.
     
 - **Cops**
   
