@@ -21,7 +21,7 @@ We are trying to model the grievance behaviour of citizens as a measure of varyi
 
 In the beta implementation, there are two main agents(i.e. Citizen and Cops). The task of Citizen is to revolt if the grievance is above a threshold and the task of Cops is to imprison the citizen who is in revolt state. The Cops can also eliminate the citizen based on the number of times it has been imprisoned in the past.
 
-There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which essentially tell us about the economic status of that agent. Simultaneously, the parameters that affect the Citizen are **Democracy, Employment, Corruption**.
+There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which essentially tell us about the economic status of that agent. Simultaneously, the parameters that affect the Citizen are **Hardship, Legitimacy, Wealth**.
 
 ### Model Details
 
