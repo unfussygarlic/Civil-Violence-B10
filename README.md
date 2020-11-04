@@ -56,6 +56,9 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
 <p align="center">
   <img src="./images/grid1.PNG" alt="Graph" width="400">
 </p>
+<p align="center">
+  <img src="./images/grid2.PNG" alt="Graph" width="400">
+</p>
 
 - The graph which shows the grievance and the number of steps: 
 <p align="center">
