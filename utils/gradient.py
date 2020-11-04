@@ -1,7 +1,7 @@
 """
 Code by KindaSorta : https://stackoverflow.com/questions/59132840/python-continuous-colour-grading
 """
-
+"Showing the grievance among citizen, only for display purposes" 
 
 def hex_to_RGB(hex):
     """ "#FFFFFF" -> [255,255,255] """
