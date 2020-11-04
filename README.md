@@ -54,12 +54,12 @@ There are three categories in **Citizen** agent(**Poor, Middle, & Rich**) which 
     6. Any agent that gets jailed becomes a black square
     
 <p align="center">
-  <img src="./images/grid.png" alt="Graph" width="400">
+  <img src="./images/grid1.png" alt="Graph" width="400">
 </p>
 
 - The graph which shows the grievance and the number of steps: 
 <p align="center">
-  <img src="./images/Graph.png" alt="Graph" width="400">
+  <img src="./images/grievance.png" alt="Graph" width="400">
 </p>
 
 - The parameters used in the experiment: 
